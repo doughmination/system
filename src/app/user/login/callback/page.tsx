@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import * as s from "../../auth.css";
 
 /**
- * PocketID login landing page.
+ * SSO login landing page.
  *
  * The API's OIDC callback mints a JWT and redirects here with the token in the
  * URL fragment (`#token=…&from=…`) so it never touches a server log. We read it

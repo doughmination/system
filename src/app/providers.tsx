@@ -15,7 +15,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 /**
  * Reads the auth token from localStorage on every request, so a token that
- * arrives after a PocketID login (or is cleared on logout) is always current
+ * arrives after an SSO login (or is cleared on logout) is always current
  * without rebuilding the client.
  */
 function readToken(): string | null {

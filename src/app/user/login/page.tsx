@@ -27,7 +27,7 @@ const Login: React.FC = () => {
 
   const handleLogin = () => {
     setRedirecting(true);
-    // Full navigation (not fetch): the API 302s to PocketID, which sends the
+    // Full navigation (not fetch): the API 302s to the SSO, which sends the
     // browser back to our callback page with a token in the URL fragment.
     window.location.href = client.pocketIdLoginUrl(from);
   };

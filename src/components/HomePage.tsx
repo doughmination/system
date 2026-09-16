@@ -15,6 +15,7 @@ import {
   useSystem,
   useUserInfo,
   useConnectionStatus,
+  useDoughminationClient,
   type PluralMember,
 } from "@doughmination/react-api";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,7 @@ const MENTAL_STATE_CLASSES: Record<string, string> = {
 
 export default function HomePage() {
   const router = useRouter();
+  const client = useDoughminationClient();
 
   // UI-only state; all server data now comes from the package hooks below.
   const [menuOpen, setMenuOpen] = useState(false);
@@ -174,10 +176,29 @@ export default function HomePage() {
     };
   }, [token, isMock, userInfoQuery.data]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const current = localStorage.getItem("token");
     localStorage.removeItem("token");
     setToken(null);
-    router.push("/");
+
+    // End the API session and, via the SSO's logout page, the SSO session too.
+    // If the API can't be reached the local sign-out above still stands.
+    let endSession: string | null = null;
+    if (current) {
+      try {
+        const res = await fetch(`${client.baseUrl}/plural/auth/logout`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${current}` },
+        });
+        const data = (await res.json()) as { end_session_url?: string | null };
+        endSession = data.end_session_url ?? null;
+      } catch {
+        // offline or API down
+      }
+    }
+
+    if (endSession) window.location.href = endSession;
+    else router.push("/");
   };
 
   // Event handlers

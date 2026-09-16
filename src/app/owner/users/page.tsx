@@ -47,7 +47,7 @@ const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
 const UserManager: React.FC = () => {
   const client = useDoughminationClient();
 
-  // Email is contact metadata only (sign-in is PocketID). A user may change
+  // Email is contact metadata only (sign-in is the SSO). A user may change
   // their OWN address on their profile page; an admin/owner may change anyone
   // else's. This panel only ever acts on other people, so the control is
   // owner-only here.
