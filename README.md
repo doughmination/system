@@ -8,7 +8,7 @@ through the Doughmination API, so pages render fresh on every request.
 
 - [Next.js 16](https://nextjs.org/) (App Router, React 19)
 - [vanilla-extract](https://vanilla-extract.style/) for styling
-- [TanStack Query](https://tanstack.com/query) + `@doughmination/react-api` for data
+- [TanStack Query](https://tanstack.com/query) + `doughmination-api` for data
 - Deployed to **Cloudflare Workers** via [OpenNext](https://opennext.js.org/cloudflare)
 
 ## Local development
@@ -50,13 +50,13 @@ rebuild.
 
 ## Scripts
 
-| Script | Description |
-| --- | --- |
-| `npm run dev` | Next.js dev server (Turbopack) |
-| `npm run build` | Plain `next build` |
+| Script            | Description                                |
+| ----------------- | ------------------------------------------ |
+| `npm run dev`     | Next.js dev server (Turbopack)             |
+| `npm run build`   | Plain `next build`                         |
 | `npm run preview` | Build + serve in the local Workers runtime |
-| `npm run deploy` | Build + deploy to Cloudflare Workers |
-| `npm run lint` | ESLint |
+| `npm run deploy`  | Build + deploy to Cloudflare Workers       |
+| `npm run lint`    | ESLint                                     |
 
 ## Contributing & licence
 

@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { useUserInfo } from "@doughmination/react-api";
+import { useUserInfo } from "doughmination-api";
 import { PersonFill } from "react-bootstrap-icons";
 import * as s from "./profile.css";
 
@@ -28,7 +28,7 @@ function UserProfile() {
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     console.error("Failed to load avatar:", userData?.avatar_url);
     setImageError(true);
-    (e.target as HTMLImageElement).src = "https://m.doughmination.gay/img/avatars/favicon.png";
+    (e.target as HTMLImageElement).src = "https://raw.doughmination.gay/favicons/favicon.png";
   };
 
   const handleImageLoad = () => {

@@ -14,7 +14,7 @@ import {
   useDoughminationClient,
   isDoughminationError,
   type PluralMember,
-} from "@doughmination/react-api";
+} from "doughmination-api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,7 @@ import * as sw from "./switch.css";
 
 type Member = PluralMember;
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 const SwitchManager: React.FC = () => {
   const client = useDoughminationClient();

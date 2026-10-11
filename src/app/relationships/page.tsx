@@ -8,11 +8,11 @@
 
 import React, { useMemo } from "react";
 import Link from "next/link";
-import { useMembers, useRelationships, type PluralMember } from "@doughmination/react-api";
+import { useMembers, useRelationships, type PluralMember } from "doughmination-api";
 import { normalizeColor } from "@/lib/utils";
 import * as s from "@/styles/admin.css";
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 const SIZE = 720;
 const CENTER = SIZE / 2;

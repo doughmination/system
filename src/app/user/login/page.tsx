@@ -8,7 +8,7 @@
 
 import React, { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useDoughminationClient } from "@doughmination/react-api";
+import { useDoughminationClient } from "doughmination-api";
 import { KeyFill } from "react-bootstrap-icons";
 import * as s from "../auth.css";
 

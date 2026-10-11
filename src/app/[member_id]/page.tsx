@@ -15,7 +15,7 @@ import {
   useMembers,
   useRelationships,
   type PluralMember,
-} from "@doughmination/react-api";
+} from "doughmination-api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +24,7 @@ import { normalizeColor, readableOnDark } from "@/lib/utils";
 import { findPrideFlag, prideSwatchGradient } from "@/lib/pride";
 import * as s from "./member.css";
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 export default function MemberDetails() {
   const params = useParams<{ member_id: string }>();

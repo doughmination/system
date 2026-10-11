@@ -26,12 +26,12 @@ import {
   useMembers,
   useDoughminationClient,
   type PluralMember,
-} from "@doughmination/react-api";
+} from "doughmination-api";
 import * as s from "@/styles/admin.css";
 
 type Member = PluralMember;
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 // Member-tag add/remove aren't wrapped by the package client, so these two
 // endpoints are called inline off the client's base URL.

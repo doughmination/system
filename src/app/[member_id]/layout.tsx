@@ -13,9 +13,9 @@ import { cache } from "react";
 import {
   DoughminationClient,
   type PluralMember,
-} from "@doughmination/react-api/server";
+} from "doughmination-api/server";
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 const SITE_NAME = "Doughmination System";
 

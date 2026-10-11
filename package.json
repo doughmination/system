@@ -15,7 +15,6 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
-    "@doughmination/react-api": "^1.6.1",
     "@opennextjs/cloudflare": "^1.20.2",
     "@radix-ui/react-checkbox": "^1.3.11",
     "@radix-ui/react-label": "^2.1.15",
@@ -27,6 +26,7 @@
     "@tanstack/react-query": "^5.101.4",
     "@vanilla-extract/recipes": "^0.5.7",
     "clsx": "^2.1.1",
+    "doughmination-api": "^1.6.0",
     "next": "16.2.12",
     "react": "19.2.8",
     "react-bootstrap-icons": "^1.11.6",

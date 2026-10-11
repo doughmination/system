@@ -30,7 +30,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import { useDoughminationClient } from "@doughmination/react-api";
+import { useDoughminationClient } from "doughmination-api";
 import * as s from "./metrics.css";
 
 interface MemberMetric {
@@ -71,7 +71,7 @@ const COLORS = [
   "#a855f7", "#06b6d4", "#eab308", "#22c55e", "#f43f5e",
 ];
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 type TimeframeKey = "24h" | "48h" | "5d" | "7d" | "30d";
 

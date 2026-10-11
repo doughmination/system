@@ -52,7 +52,7 @@ export const bgImageLayer = style({
   position: "fixed",
   inset: "-40px",
   zIndex: -1,
-  backgroundImage: "url('https://m.doughmination.gay/img/bg/main.png')",
+  backgroundImage: "url('https://raw.doughmination.gay/img/bg/main.png')",
   backgroundSize: "cover",
   backgroundPosition: "center",
   filter: "blur(16px) brightness(0.55) saturate(0.9)",

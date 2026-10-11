@@ -8,7 +8,7 @@
 
 import { useEffect } from "react";
 
-const SFX_BASE = "https://m.doughmination.gay/sfx/";
+const SFX_BASE = "https://raw.doughmination.gay/sfx/";
 
 const NAMES = ["hover", "click", "toggle"] as const;
 

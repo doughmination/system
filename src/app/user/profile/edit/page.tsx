@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useUserInfo, useDoughminationClient } from "@doughmination/react-api";
+import { useUserInfo, useDoughminationClient } from "doughmination-api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -77,7 +77,7 @@ function UserEdit() {
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     console.error("Failed to load avatar preview:", avatarUrl);
     setImageError(true);
-    (e.target as HTMLImageElement).src = "https://m.doughmination.gay/img/avatars/favicon.png";
+    (e.target as HTMLImageElement).src = "https://raw.doughmination.gay/favicons/favicon.png";
   };
 
   const handleImageLoad = () => {

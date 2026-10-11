@@ -8,7 +8,7 @@
 
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useUserInfo } from "@doughmination/react-api";
+import { useUserInfo } from "doughmination-api";
 import { ShieldLockFill, ArrowLeft } from "react-bootstrap-icons";
 import * as s from "./components.css";
 

@@ -27,10 +27,10 @@ import {
   useAddRelationship,
   useRemoveRelationship,
   type PluralMember,
-} from "@doughmination/react-api";
+} from "doughmination-api";
 import * as s from "@/styles/admin.css";
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 const RELATIONSHIP_TYPES = ["partner", "spouse", "queerplatonic", "datemate", "crush"];
 

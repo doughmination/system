@@ -8,7 +8,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useDoughminationClient, isDoughminationError } from "@doughmination/react-api";
+import { useDoughminationClient, isDoughminationError } from "doughmination-api";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import ProtectedRoute from "@/components/ProtectedRoute";

@@ -17,7 +17,7 @@ import {
   useConnectionStatus,
   useDoughminationClient,
   type PluralMember,
-} from "@doughmination/react-api";
+} from "doughmination-api";
 import { Button } from "@/components/ui/button";
 import { cn, normalizeColor, readableOnDark } from "@/lib/utils";
 import { findPrideFlag, prideSwatchGradient } from "@/lib/pride";
@@ -40,7 +40,7 @@ interface UserData {
   display_name?: string;
 }
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 const MENTAL_STATE_CLASSES: Record<string, string> = {
   safe: site.mentalStateSafe,

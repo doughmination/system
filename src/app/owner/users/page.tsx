@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { useUserInfo, useDoughminationClient } from "@doughmination/react-api";
+import { useUserInfo, useDoughminationClient } from "doughmination-api";
 import { cn } from "@/lib/utils";
 import * as s from "@/styles/admin.css";
 
@@ -42,7 +42,7 @@ interface User {
   avatar_url?: string;
 }
 
-const FALLBACK_AVATAR = "https://m.doughmination.gay/img/avatars/favicon.png";
+const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
 const UserManager: React.FC = () => {
   const client = useDoughminationClient();
