@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useUserInfo } from "doughmination-api";
-import { PersonFill } from "react-bootstrap-icons";
+import { User } from "lucide-react";
 import * as s from "./profile.css";
 
 function UserProfile() {
@@ -97,7 +97,7 @@ function UserProfile() {
                 </div>
               ) : (
                 <div className={s.avatarFallback}>
-                  <PersonFill className={s.avatarFallbackEmoji} />
+                  <User className={s.avatarFallbackEmoji} />
                 </div>
               )}
 

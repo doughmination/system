@@ -25,7 +25,6 @@ const pulse = keyframes({
 
 export const page = style({
   minHeight: "100vh",
-  backgroundColor: vars.bg,
   color: vars.text,
   transition: "background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease",
   display: "flex",
@@ -120,7 +119,7 @@ export const progressTrack = style({
   width: "100%",
   backgroundColor: vars.surface,
   border: `1px solid ${vars.surfaceHigher}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   height: "0.75rem",
   overflow: "hidden",
 });
@@ -134,7 +133,7 @@ export const progressBar = style({
 export const featuresBox = style({
   backgroundColor: vars.surface,
   border: `1px solid ${vars.surfaceHigher}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   padding: "1.5rem",
   display: "flex",
   flexDirection: "column",

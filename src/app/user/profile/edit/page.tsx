@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { PersonFill } from "react-bootstrap-icons";
+import { User } from "lucide-react";
 import * as s from "./edit.css";
 
 /** Loose client-side sanity check only — the API does the real validation. */
@@ -216,7 +216,7 @@ function UserEdit() {
                       />
                     ) : (
                       <div className={s.avatarFallback}>
-                        <PersonFill className={s.avatarFallbackEmoji} />
+                        <User className={s.avatarFallbackEmoji} />
                       </div>
                     )}
                     {avatarUrl.trim() !== (userData.avatar_url || "") && (

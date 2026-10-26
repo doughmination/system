@@ -61,7 +61,7 @@ export const memberOption = style({
   alignItems: "center",
   gap: "0.75rem",
   padding: "0.75rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   cursor: "pointer",
   transition: "border-color 0.15s ease, background-color 0.15s ease",
@@ -78,7 +78,7 @@ export const memberOptionSelected = style({
 export const tagChip = style({
   fontSize: "0.6875rem",
   padding: "0.125rem 0.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   backgroundColor: "transparent",
   color: vars.textSoft,
@@ -110,7 +110,7 @@ export const sideRow = style({
 export const sideAvatar = style({
   width: "2rem",
   height: "2rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   objectFit: "cover",
 });

@@ -61,7 +61,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#0a0b10",
+  themeColor: "#0b0a0d",
 };
 
 export default function RootLayout({
@@ -74,7 +74,7 @@ export default function RootLayout({
       <head>
         <link
           rel="preconnect"
-          href="https://raw.doughmination.gay"
+          href="https://m.doughmination.gay"
           crossOrigin=""
         />
       </head>

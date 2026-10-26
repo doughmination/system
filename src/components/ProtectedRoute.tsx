@@ -9,7 +9,7 @@
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUserInfo } from "doughmination-api";
-import { ShieldLockFill, ArrowLeft } from "react-bootstrap-icons";
+import { ShieldUser, ArrowLeft } from "lucide-react";
 import * as s from "./components.css";
 
 interface ProtectedRouteProps {
@@ -82,7 +82,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     <div className={s.guardPage}>
       <div className={s.guardCard}>
         <div className={s.guardIconBlock}>
-          <ShieldLockFill className={s.guardIcon} />
+          <ShieldUser className={s.guardIcon} />
         </div>
         <h1 className={s.guardTitle}>{title}</h1>
         <p className={s.guardText}>{text}</p>

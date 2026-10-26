@@ -63,7 +63,7 @@ export const avatarWrap = style({
 export const avatar = style({
   width: "6rem",
   height: "6rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   margin: "0 auto",
   objectFit: "cover",
   border: `2px solid ${vars.surfaceHigher}`,
@@ -73,7 +73,7 @@ export const avatar = style({
 export const avatarFallback = style({
   width: "6rem",
   height: "6rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   backgroundColor: vars.surface,
   margin: "0 auto 1rem",
   display: "flex",

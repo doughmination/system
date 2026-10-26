@@ -41,29 +41,7 @@ export const page = style({
   position: "relative",
   isolation: "isolate",
   minHeight: "100vh",
-  backgroundColor: vars.bg,
   color: vars.text,
-});
-
-/** Full-bleed background image behind everything else on the page — blurred
- *  and darkened so panel text stays legible over it. Swap the URL for a
- *  different asset here if the source image ever moves. */
-export const bgImageLayer = style({
-  position: "fixed",
-  inset: "-40px",
-  zIndex: -1,
-  backgroundImage: "url('https://raw.doughmination.gay/img/bg/main.png')",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  filter: "blur(16px) brightness(0.55) saturate(0.9)",
-  transform: "scale(1.08)",
-});
-
-export const bgScrim = style({
-  position: "fixed",
-  inset: 0,
-  zIndex: -1,
-  backgroundColor: "rgba(5, 6, 10, 0.45)",
 });
 
 export const wsBanner = style({
@@ -144,7 +122,7 @@ export const mobileMenuBtn = style({
   alignItems: "center",
   justifyContent: "center",
   padding: "0.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   backgroundColor: vars.surface,
   color: vars.text,
   border: `1px solid ${vars.surfaceHigher}`,
@@ -218,7 +196,7 @@ export const mobileLink = style({
   display: "block",
   width: "100%",
   padding: "0.75rem 1rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   fontSize: "0.8125rem",
   textAlign: "center",
   textTransform: "uppercase",
@@ -422,7 +400,7 @@ export const statusTagText = style({
 export const avatarImg = style({
   width: "4rem",
   height: "4rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   objectFit: "cover",
   borderWidth: "2px",
   borderStyle: "solid",
@@ -491,7 +469,7 @@ export const tagRowSpaced = style([tagRow, { marginTop: "0.5rem" }]);
 export const tagChip = style({
   fontSize: "0.6875rem",
   padding: "0.125rem 0.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   backgroundColor: "transparent",
   color: vars.textSoft,
@@ -570,7 +548,7 @@ export const filtersButton = style({
   backgroundColor: vars.surface,
   color: vars.textSoft,
   padding: "0.625rem 1.05rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   transition: "background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease",
   ":hover": {
     backgroundColor: vars.surfaceHi,
@@ -604,9 +582,12 @@ export const filtersPanel = style({
   left: 0,
   width: "21rem",
   maxWidth: "calc(100vw - 2rem)",
-  backgroundColor: vars.bgRaised,
-  border: `1px solid ${vars.accent}`,
-  boxShadow: "5px 5px 0 rgba(0, 0, 0, 0.4)",
+  backgroundColor: vars.panel,
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
+  border: `1px solid ${vars.accentLine}`,
+  borderRadius: vars.radius,
+  boxShadow: `0 0 0 4px ${vars.accentDim}`,
   padding: "1.1rem",
   zIndex: 30,
   "@media": {
@@ -658,7 +639,7 @@ export const activeChip = style({
   border: `1px solid ${vars.surfaceHigher}`,
   color: vars.textSoft,
   padding: "0.3rem 0.35rem 0.3rem 0.6rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
 });
 
 export const activeChipKey = style({

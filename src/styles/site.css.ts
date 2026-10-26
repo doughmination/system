@@ -44,11 +44,10 @@ export const header = style({
   right: 0,
   zIndex: 40,
   height: "68px",
-  backgroundColor: `color-mix(in srgb, ${vars.bg} 90%, transparent)`,
-  backdropFilter: "blur(12px)",
-  WebkitBackdropFilter: "blur(12px)",
-  borderBottom: `1px solid color-mix(in srgb, ${vars.surface} 50%, transparent)`,
-  boxShadow: `0 1px 3px color-mix(in srgb, ${vars.text} 8%, transparent)`,
+  backgroundColor: vars.panel,
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
+  borderBottom: `1px solid ${vars.line}`,
   "@media": {
     [mobile]: {
       height: "60px",
@@ -164,7 +163,7 @@ globalStyle(`${memberGridItem} a`, {
   gap: "0.25rem",
   height: "100%",
   width: "100%",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   transition: "border-color 0.15s ease, background-color 0.15s ease",
   textDecoration: "none !important" as unknown as "none",
   /* `surface` sits one step lighter than `bg` in every flavour, so the card
@@ -183,7 +182,7 @@ globalStyle(`${memberGridItem} a:hover`, {
 /* Avatars */
 export const avatarContainer = style({
   position: "relative",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   overflow: "hidden",
   flexShrink: 0,
   margin: "0 auto",
@@ -220,7 +219,7 @@ globalStyle(`${avatarContainer} img`, {
 
 globalStyle(`${memberGridItem} a:hover ${avatarContainer}`, {
   borderColor: "var(--member-color)",
-  boxShadow: "3px 3px 0 var(--member-color)",
+  boxShadow: "0 0 0 4px color-mix(in srgb, var(--member-color) 18%, transparent)",
 });
 
 /* Fronting members */
@@ -286,7 +285,7 @@ const pulse = keyframes({
 
 export const mentalStateBanner = style({
   margin: "1rem 0",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: "1px solid",
   position: "relative",
   fontFamily: FONT_COMIC,
@@ -329,7 +328,7 @@ export const hostBadge = style({
   display: "inline-block",
   fontSize: "0.7rem",
   padding: "0.15rem 0.55rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   marginLeft: "0.5rem",
   fontWeight: 700,
   textTransform: "uppercase",
@@ -356,7 +355,7 @@ export const githubButton = style({
   gap: "0.5rem",
   padding: "0.875rem 1.75rem",
   minHeight: "3rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   fontWeight: 700,
   fontSize: "0.8125rem",
   textTransform: "uppercase",
@@ -384,7 +383,7 @@ export const searchContainer = style({
 export const searchInput = style({
   width: "100%",
   padding: "0.75rem 1rem 0.75rem 3rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   backgroundColor: vars.surface,
   color: vars.text,
@@ -418,7 +417,7 @@ export const searchClear = style({
   color: vars.textMuted,
   cursor: "pointer",
   padding: "0.25rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   transition: "color 0.15s ease, background-color 0.15s ease",
   ":hover": {
     color: vars.text,
@@ -429,7 +428,7 @@ export const searchClear = style({
 /* Filter buttons */
 export const filterButton = style({
   padding: "0.5rem 1rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   transition: "background-color 0.15s ease, color 0.15s ease",
   fontFamily: FONT_COMIC,
   fontWeight: 700,
@@ -467,7 +466,7 @@ export const frontingGlow = style({
 globalStyle(`${frontingGlow} a`, {
   background: "color-mix(in srgb, var(--member-color) 8%, transparent)",
   border: "2px solid var(--member-color)",
-  boxShadow: "3px 3px 0 var(--member-color)",
+  boxShadow: "0 0 0 4px color-mix(in srgb, var(--member-color) 18%, transparent)",
 });
 
 globalStyle(`${frontingGlow} a:hover`, {
@@ -476,7 +475,7 @@ globalStyle(`${frontingGlow} a:hover`, {
 
 globalStyle(`${frontingGlow} img`, {
   borderColor: "var(--member-color)",
-  boxShadow: "2px 2px 0 var(--member-color)",
+  boxShadow: "0 0 0 3px color-mix(in srgb, var(--member-color) 18%, transparent)",
 });
 
 globalStyle(`${frontingGlow} a::before`, {
@@ -488,7 +487,7 @@ globalStyle(`${frontingGlow} a::before`, {
   color: "black",
   fontSize: "0.6rem",
   padding: "0.15rem 0.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   fontWeight: 700,
   letterSpacing: "0.05em",
   fontFamily: FONT_COMIC,

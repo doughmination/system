@@ -10,4 +10,11 @@ import { defineCloudflareConfig } from "@opennextjs/cloudflare";
  * cached page. To add persistent caching later, provision an R2 bucket and set
  * `incrementalCache: r2IncrementalCache` (import from
  * "@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache"). */
-export default defineCloudflareConfig({});
+const config = defineCloudflareConfig({});
+
+/* `bun run build` is `opennextjs-cloudflare build` (so Cloudflare Workers Builds
+ * produce .open-next/ for `wrangler deploy`). OpenNext's default buildCommand is
+ * `npm run build`, which would recurse — point it at the plain Next build. */
+config.buildCommand = "bun run build:next";
+
+export default config;

@@ -12,7 +12,6 @@ export const page = style({
   minHeight: "100vh",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: vars.bg,
 });
 
 export const inner = style({ textAlign: "center" });

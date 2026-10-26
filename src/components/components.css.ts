@@ -38,7 +38,7 @@ export const statusFull = style({
   alignItems: "flex-start",
   gap: "0.5rem",
   padding: "0.75rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   backgroundColor: vars.surface,
   border: `1px solid ${vars.surfaceHigher}`,
 });

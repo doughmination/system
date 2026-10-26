@@ -11,14 +11,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import * as s from "@/styles/admin.css";
-import { People } from "react-bootstrap-icons";
+import { Users, ArrowLeft } from "lucide-react";
 
 const OwnerDash: React.FC = () => {
   const ownerPages = [
     {
       path: "/owner/users",
       label: "User Management",
-      icon: People,
+      icon: Users,
       desc: "Manage all users"
     },
   ];
@@ -34,14 +34,7 @@ const OwnerDash: React.FC = () => {
           </div>
           <Button variant="outline" asChild>
             <Link href="/">
-              <svg className={s.btnIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
+              <ArrowLeft className={s.btnIcon} />
               Back to Home
             </Link>
           </Button>

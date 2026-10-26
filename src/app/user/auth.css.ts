@@ -30,7 +30,7 @@ export const card = style({
   margin: "2.5rem auto 0",
   padding: "1.5rem",
   border: `1px solid ${vars.surfaceHigher}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   backgroundColor: vars.bgRaised,
 });
 
@@ -47,7 +47,7 @@ export const errorBox = style({
   border: `1px solid ${vars.danger}`,
   color: vars.danger,
   padding: "0.75rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   marginBottom: "1rem",
 });
 
@@ -56,7 +56,7 @@ export const successBox = style({
   border: `1px solid ${vars.success}`,
   color: vars.success,
   padding: "0.75rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   marginBottom: "1rem",
 });
 
@@ -78,7 +78,7 @@ export const textInput = style({
   width: "100%",
   border: `1px solid ${vars.surfaceHigher}`,
   padding: "0.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   backgroundColor: vars.surface,
   color: vars.text,
   fontFamily: vars.fontComic,
@@ -129,7 +129,7 @@ export const submitBtn = style({
   backgroundColor: vars.accent,
   color: vars.bgDeep,
   padding: "0.625rem 0.75rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.text}`,
   cursor: "pointer",
   fontWeight: 700,

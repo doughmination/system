@@ -17,24 +17,28 @@ import { vars } from "./theme.css";
 const comic = "Comic Code";
 
 globalFontFace(comic, {
-  src: "url('https://raw.doughmination.gay/f/Comic-Code/woff2/ComicCode-Regular.woff2') format('woff2')",
+  src: "url('https://m.doughmination.gay/f/Comic-Code/woff2/ComicCode-Regular.woff2') format('woff2')",
   fontWeight: 400,
   fontStyle: "normal",
+  fontDisplay: "swap",
 });
 globalFontFace(comic, {
-  src: "url('https://raw.doughmination.gay/f/Comic-Code/woff2/ComicCode-Italic.woff2') format('woff2')",
+  src: "url('https://m.doughmination.gay/f/Comic-Code/woff2/ComicCode-Italic.woff2') format('woff2')",
   fontWeight: 400,
   fontStyle: "italic",
+  fontDisplay: "swap",
 });
 globalFontFace(comic, {
-  src: "url('https://raw.doughmination.gay/f/Comic-Code/woff2/ComicCode-Medium.woff2') format('woff2')",
+  src: "url('https://m.doughmination.gay/f/Comic-Code/woff2/ComicCode-Medium.woff2') format('woff2')",
   fontWeight: 500,
   fontStyle: "normal",
+  fontDisplay: "swap",
 });
 globalFontFace(comic, {
-  src: "url('https://raw.doughmination.gay/f/Comic-Code/woff2/ComicCode-Bold.woff2') format('woff2')",
+  src: "url('https://m.doughmination.gay/f/Comic-Code/woff2/ComicCode-Bold.woff2') format('woff2')",
   fontWeight: 700,
   fontStyle: "normal",
+  fontDisplay: "swap",
 });
 
 /* ============================================================================
@@ -44,7 +48,7 @@ globalStyle("*", {
   margin: 0,
   padding: 0,
   boxSizing: "border-box",
-  borderColor: vars.surface,
+  borderColor: vars.line,
 });
 
 globalStyle("html, body", {
@@ -57,19 +61,45 @@ globalStyle("html", {
 });
 
 globalStyle("body", {
-  fontFamily: `'${comic}', sans-serif`,
+  fontFamily: vars.fontComic,
   background: vars.bg,
   color: vars.text,
   minHeight: "100vh",
-  transition: "background-color 0.3s ease, color 0.3s ease",
+  fontSize: "15px",
+  lineHeight: 1.6,
+});
+
+/* The site's wallpaper and fade (as in the inbox app), fixed behind every
+   page. z-index -1 keeps it under all content, portals included. */
+globalStyle("body::before, body::after", {
+  content: '""',
+  position: "fixed",
+  inset: 0,
+  zIndex: -1,
+  pointerEvents: "none",
+});
+globalStyle("body::before", {
+  background: "url('/background.avif') center / cover no-repeat",
+  opacity: 0.5,
+});
+globalStyle("body::after", {
+  background: [
+    `linear-gradient(rgb(11 10 13 / 55%), rgb(11 10 13 / 80%) 55%, ${vars.bg})`,
+    "radial-gradient(70% 60% at 20% 30%, rgb(235 69 158 / 12%), transparent 70%)",
+  ].join(", "),
 });
 
 globalStyle(
   "h1, h2, h3, h4, h5, h6, label, input, select, textarea, button",
   {
-    fontFamily: `'${comic}', cursive`,
+    fontFamily: vars.fontComic,
   },
 );
+
+globalStyle("h1, h2, h3", {
+  lineHeight: 1.25,
+  textWrap: "balance",
+});
 
 /* Anchors inherit their surrounding colour and are not underlined by default.
    Without this, every next/link renders with the user-agent blue/purple
@@ -96,8 +126,8 @@ globalStyle("h3", {
 globalStyle(
   "button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible",
   {
-    outline: `2px solid ${vars.accent}`,
-    outlineOffset: "2px",
+    outline: "none",
+    boxShadow: `0 0 0 4px ${vars.accentDim}`,
   },
 );
 
@@ -107,29 +137,18 @@ globalStyle("h2", { "@media": { "screen and (max-width: 640px)": { fontSize: "1.
 globalStyle("h3", { "@media": { "screen and (max-width: 640px)": { fontSize: "1.5rem" } } });
 
 /* ============================================================================
-   SCROLLBAR STYLING — THEME AWARE
+   SCROLLBAR — thin and quiet, as in the inbox app
    ============================================================================ */
-globalStyle("html ::-webkit-scrollbar", {
-  width: "12px",
-  height: "12px",
-});
-globalStyle("html ::-webkit-scrollbar-track", {
-  background: vars.bgRaised,
-  borderRadius: 0,
-});
-globalStyle("html ::-webkit-scrollbar-thumb", {
-  background: vars.accent,
-  borderRadius: 0,
-  border: `2px solid ${vars.bgRaised}`,
-  transition: "background-color 0.2s ease",
-});
-globalStyle("html ::-webkit-scrollbar-thumb:hover", {
-  background: vars.accentAlt,
-});
-globalStyle("html ::-webkit-scrollbar-thumb:active", {
-  background: vars.lavender,
-});
-globalStyle("html", {
+globalStyle("*", {
   scrollbarWidth: "thin",
-  scrollbarColor: `${vars.accent} ${vars.bgRaised}`,
+  scrollbarColor: "rgb(255 255 255 / 14%) transparent",
+});
+
+globalStyle("*, *::before, *::after", {
+  "@media": {
+    "(prefers-reduced-motion: reduce)": {
+      transition: "none !important",
+      animation: "none !important",
+    },
+  },
 });

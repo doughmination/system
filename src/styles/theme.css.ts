@@ -37,46 +37,57 @@ export const vars = createGlobalThemeContract({
   textSoft: "text-soft",
   text: "text",
   fontComic: "font-comic",
+  line: "line",
+  accentLine: "accent-line",
+  accentDim: "accent-dim",
+  panel: "panel",
+  radius: "radius",
+  radiusSm: "radius-sm",
 });
 
 /** Not flavor-dependent, but goes through the same contract so it's always
  *  referenced via var(--font-comic) — never inlined as a raw string, which
  *  trips up the CSS serializer on the quote+comma combo. */
-const FONT_COMIC_VALUE = "'Comic Code', cursive";
+const FONT_COMIC_VALUE = "'Comic Code', ui-monospace, monospace";
 
 /**
- * One palette, applied globally. The old per-flavor themes (cherry, toxic,
- * estrogen, cyberpunk, lemon) and the ThemeToggle switcher were dropped — every
- * site now shares the info site's dark trans palette. Extra shades are derived
- * from info's seven core colours (bg #0a0b10, surface #12141c, surfaceHover
- * #1b1e2a, text #f4f6fb, muted #9aa3c2, border #232838, accent #f5a9b8) so the
- * whole thing reads as one uniform, pink-accented dark theme.
+ * One palette, applied globally — matched to the inbox app (email/src/web/
+ * app.css), which itself follows the main site's theme.css: translucent raised
+ * surfaces over a fixed wallpaper, hairline borders, rounded cards that pick up
+ * an accent ring on hover, pill buttons. The old token names are kept so every
+ * component follows along; the surface shades are now translucent whites.
  */
 createGlobalTheme(":root", vars, {
-  accent: "#f5a9b8",
-  accentAlt: "#d15f8c",
-  success: "#f5a9b8",
-  danger: "#d15f8c",
-  warning: "#f5a9b8",
-  info: "#9aa3c2",
-  rosewater: "#f7d6e0",
-  maroon: "#d15f8c",
-  peach: "#f5a9b8",
-  teal: "#9aa3c2",
-  sky: "#9aa3c2",
-  sapphire: "#6b7391",
-  lavender: "#f5a9b8",
-  bgDeep: "#05060a",
-  bgRaised: "#0e1017",
-  bg: "#0a0b10",
-  surface: "#12141c",
-  surfaceHi: "#1b1e2a",
-  surfaceHigher: "#232838",
-  textFaint: "#5b6480",
-  textDim: "#6b7391",
-  textMuted: "#9aa3c2",
-  textSoft: "#c9cfe0",
-  text: "#f4f6fb",
+  accent: "#eb459e",
+  accentAlt: "#c9327f",
+  success: "#eb459e",
+  danger: "#ff5c7a",
+  warning: "#eb459e",
+  info: "#a49eab",
+  rosewater: "#f7c6e0",
+  maroon: "#c9327f",
+  peach: "#f07ab8",
+  teal: "#a49eab",
+  sky: "#a49eab",
+  sapphire: "#7d7785",
+  lavender: "#f07ab8",
+  bgDeep: "#070609",
+  bgRaised: "rgb(255 255 255 / 3.5%)",
+  bg: "#0b0a0d",
+  surface: "rgb(255 255 255 / 3.5%)",
+  surfaceHi: "rgb(255 255 255 / 6%)",
+  surfaceHigher: "rgb(255 255 255 / 9%)",
+  textFaint: "#6a6470",
+  textDim: "#857f8c",
+  textMuted: "#a49eab",
+  textSoft: "#d3ced8",
+  text: "#ece9ef",
   fontComic: FONT_COMIC_VALUE,
+  line: "rgb(255 255 255 / 9%)",
+  accentLine: "rgb(235 69 158 / 40%)",
+  accentDim: "rgb(235 69 158 / 14%)",
+  panel: "rgb(11 10 13 / 72%)",
+  radius: "1rem",
+  radiusSm: "0.5rem",
 });
 globalStyle(":root", { colorScheme: "dark" });

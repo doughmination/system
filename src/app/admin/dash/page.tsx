@@ -14,14 +14,15 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import * as s from "@/styles/admin.css";
 import {
-  ArrowRepeat,
+  RefreshCw,
   Activity,
-  ChatSquareText,
+  MessageSquareText,
   Tag,
   Flag,
-  CircleHalf,
-  Hdd,
-} from "react-bootstrap-icons";
+  Contrast,
+  HardDrive,
+  ArrowLeft,
+} from "lucide-react";
 
 const AdminDash: React.FC = () => {
   const client = useDoughminationClient();
@@ -34,7 +35,7 @@ const AdminDash: React.FC = () => {
     {
       path: "/admin/switch",
       label: "Switch Manager",
-      icon: ArrowRepeat,
+      icon: RefreshCw,
       desc: "Manage fronting members"
     },
     {
@@ -46,7 +47,7 @@ const AdminDash: React.FC = () => {
     {
       path: "/admin/status",
       label: "Status Manager",
-      icon: ChatSquareText,
+      icon: MessageSquareText,
       desc: "Set member statuses"
     },
     {
@@ -64,13 +65,13 @@ const AdminDash: React.FC = () => {
     {
       path: "/admin/relationships",
       label: "Relationships",
-      icon: CircleHalf,
+      icon: Contrast,
       desc: "Map who is dating who",
     },
     {
       path: "https://doughmination.uk/docs",
       label: "API Endpoints",
-      icon: Hdd,
+      icon: HardDrive,
       desc: "View API reference",
       external: true,
     },
@@ -117,14 +118,7 @@ const AdminDash: React.FC = () => {
           </div>
           <Button variant="outline" asChild>
             <Link href="/">
-              <svg className={s.btnIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
+              <ArrowLeft className={s.btnIcon} />
               Back to Home
             </Link>
           </Button>

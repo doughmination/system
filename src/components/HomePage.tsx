@@ -24,13 +24,16 @@ import { findPrideFlag, prideSwatchGradient } from "@/lib/pride";
 import * as site from "@/styles/site.css";
 import * as s from "@/app/home.css";
 import {
-  Github,
-  CheckCircleFill,
-  ExclamationTriangleFill,
-  ExclamationCircleFill,
-  ExclamationOctagonFill,
-  ShieldFillExclamation,
-} from "react-bootstrap-icons";
+  CircleCheck,
+  TriangleAlert,
+  CircleAlert,
+  OctagonAlert,
+  ShieldAlert,
+  Search,
+  Menu,
+  X,
+} from "lucide-react";
+import { Github } from "@/components/icons";
 
 // The member shape comes straight from the package now.
 type Member = PluralMember;
@@ -308,11 +311,11 @@ export default function HomePage() {
   };
 
   const MENTAL_STATE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-    safe: CheckCircleFill,
-    unstable: ExclamationTriangleFill,
-    idealizing: ExclamationCircleFill,
-    "self-harming": ExclamationOctagonFill,
-    "highly at risk": ShieldFillExclamation,
+    safe: CircleCheck,
+    unstable: TriangleAlert,
+    idealizing: CircleAlert,
+    "self-harming": OctagonAlert,
+    "highly at risk": ShieldAlert,
   };
 
   if (loading) {
@@ -329,10 +332,6 @@ export default function HomePage() {
       {!wsConnected && (
         <div className={s.wsBanner}>[ ! ] Live updates disconnected. Reconnecting...</div>
       )}
-
-      {/* Background image — see home.css.ts bgImageLayer for the source URL */}
-      <div className={s.bgImageLayer} />
-      <div className={s.bgScrim} />
 
       {/* Header with navigation */}
       <header className={s.header}>
@@ -387,13 +386,7 @@ export default function HomePage() {
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
           >
-            <svg className={s.icon24} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {menuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
+            {menuOpen ? <X className={s.icon24} /> : <Menu className={s.icon24} />}
           </button>
         </div>
 
@@ -715,14 +708,7 @@ export default function HomePage() {
 
               <div className={site.searchContainer}>
                 <div className={s.searchRelative}>
-                  <svg className={site.searchIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
+                  <Search className={site.searchIcon} />
                   <input
                     id="member-search"
                     type="text"
@@ -733,14 +719,7 @@ export default function HomePage() {
                   />
                   {searchQuery && (
                     <button onClick={clearSearch} className={site.searchClear}>
-                      <svg className={s.icon20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
+                      <X className={s.icon20} />
                     </button>
                   )}
                 </div>

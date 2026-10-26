@@ -56,7 +56,7 @@ export const bubble = style({
   position: "relative",
   backgroundColor: vars.bgDeep,
   border: `1px solid ${vars.surfaceHigher}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   padding: "0.5rem 1rem",
   maxWidth: "200px",
 });
@@ -82,7 +82,7 @@ export const bubbleText = style({
 export const avatar = style({
   width: "8rem",
   height: "8rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   margin: "0 auto",
   objectFit: "cover",
   borderWidth: "2px",

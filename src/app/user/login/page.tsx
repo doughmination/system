@@ -9,7 +9,7 @@
 import React, { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useDoughminationClient } from "doughmination-api";
-import { KeyFill } from "react-bootstrap-icons";
+import { KeyRound } from "lucide-react";
 import * as s from "../auth.css";
 
 const Login: React.FC = () => {
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
             "Redirecting to SSO…"
           ) : (
             <>
-              <KeyFill className={s.submitBtnIcon} />
+              <KeyRound className={s.submitBtnIcon} />
               Sign in with SSO
             </>
           )}

@@ -104,7 +104,7 @@ export const overviewNote = style({
 export const tooltipBox = style({
   backgroundColor: vars.bgDeep,
   border: `1px solid ${vars.surfaceHigher}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   padding: "0.75rem",
 });
 
@@ -133,7 +133,7 @@ export const fronterRow = style({
   padding: "0.75rem",
   backgroundColor: vars.surface,
   border: `1px solid ${vars.surfaceHigher}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
 });
 
 export const fronterRank = style({
@@ -142,7 +142,7 @@ export const fronterRank = style({
   justifyContent: "center",
   width: "2rem",
   height: "2rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   backgroundColor: vars.accent,
   color: vars.bgDeep,
   fontWeight: 700,
@@ -153,7 +153,7 @@ export const fronterRank = style({
 export const fronterAvatar = style({
   width: "2.5rem",
   height: "2.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   objectFit: "cover",
 });
@@ -187,7 +187,7 @@ export const progressTrack = style({
   height: "0.5rem",
   backgroundColor: vars.bg,
   border: `1px solid ${vars.surfaceHigher}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   overflow: "hidden",
 });
 

@@ -22,12 +22,12 @@ import { cn } from "@/lib/utils";
 import * as s from "@/styles/admin.css";
 import * as m from "./mental.css";
 import {
-  CheckCircleFill,
-  ExclamationTriangleFill,
-  ExclamationCircleFill,
-  ExclamationOctagonFill,
-  ShieldFillExclamation,
-} from "react-bootstrap-icons";
+  CircleCheck,
+  TriangleAlert,
+  CircleAlert,
+  OctagonAlert,
+  ShieldAlert,
+} from "lucide-react";
 
 const MentalHealthManager: React.FC = () => {
   // Live current state; the socket keeps this current after any admin saves.
@@ -57,31 +57,31 @@ const MentalHealthManager: React.FC = () => {
     {
       value: "safe",
       label: "Safe",
-      icon: CheckCircleFill,
+      icon: CircleCheck,
       className: m.stateSafe
     },
     {
       value: "unstable",
       label: "Unstable",
-      icon: ExclamationTriangleFill,
+      icon: TriangleAlert,
       className: m.stateUnstable
     },
     {
       value: "idealizing",
       label: "Idealizing",
-      icon: ExclamationCircleFill,
+      icon: CircleAlert,
       className: m.stateIdealizing
     },
     {
       value: "self-harming",
       label: "Self-Harming",
-      icon: ExclamationOctagonFill,
+      icon: OctagonAlert,
       className: m.stateSelfHarming
     },
     {
       value: "highly at risk",
       label: "Highly At Risk",
-      icon: ShieldFillExclamation,
+      icon: ShieldAlert,
       className: m.stateHighRisk
     },
   ];

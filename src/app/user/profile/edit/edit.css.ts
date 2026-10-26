@@ -91,7 +91,7 @@ export const avatarRelative = style({ position: "relative" });
 export const avatar = style({
   width: "5rem",
   height: "5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   objectFit: "cover",
   border: `2px solid ${vars.surfaceHigher}`,
 });
@@ -99,7 +99,7 @@ export const avatar = style({
 export const avatarFallback = style({
   width: "5rem",
   height: "5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   backgroundColor: vars.surface,
   display: "flex",
   alignItems: "center",
@@ -120,7 +120,7 @@ export const avatarCheck = style({
   backgroundColor: vars.accent,
   color: vars.bgDeep,
   border: `1px solid ${vars.text}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   width: "1.5rem",
   height: "1.5rem",
   display: "flex",

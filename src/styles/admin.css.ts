@@ -76,7 +76,7 @@ export const dashGrid = style({
 
 export const dashCard = style({
   padding: "1.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   backgroundColor: vars.bgRaised,
   color: vars.text,
@@ -179,7 +179,7 @@ export const userRow = style({
   gap: "0.75rem",
   padding: "1rem",
   backgroundColor: vars.surface,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
 });
 
@@ -190,7 +190,7 @@ export const userRowCurrent = style({
 export const userAvatar = style({
   width: "3rem",
   height: "3rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   objectFit: "cover",
   flexShrink: 0,
@@ -229,7 +229,7 @@ export const smallBadge = style({
 export const editPanel = style({
   padding: "1rem",
   backgroundColor: vars.bg,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   display: "flex",
   flexDirection: "column",
@@ -247,7 +247,7 @@ export const statBox = style({
   padding: "1rem",
   backgroundColor: vars.surface,
   border: `1px solid ${vars.surfaceHigher}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
 });
 
 export const statLabel = style({
@@ -279,7 +279,7 @@ export const memberRow = style({
   gap: "0.75rem",
   padding: "0.75rem",
   backgroundColor: vars.surface,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   transition: "border-color 0.15s ease",
   cursor: "pointer",
@@ -294,7 +294,7 @@ export const memberRowSelected = style({
 export const memberAvatarSm = style({
   width: "1.5rem",
   height: "1.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   objectFit: "cover",
 });
@@ -302,7 +302,7 @@ export const memberAvatarSm = style({
 export const memberAvatarMd = style({
   width: "2.5rem",
   height: "2.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   objectFit: "cover",
 });
@@ -358,7 +358,7 @@ export const emojiButton = style({
   width: "2rem",
   height: "2rem",
   fontSize: "1.25rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid transparent`,
   background: "transparent",
   cursor: "pointer",
@@ -378,7 +378,7 @@ export const statusBox = style({
   marginTop: "1rem",
   padding: "0.75rem",
   backgroundColor: vars.surface,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
 });
 
@@ -403,7 +403,7 @@ export const chip = style({
   gap: "0.375rem",
   fontSize: "0.6875rem",
   padding: "0.25rem 0.625rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   backgroundColor: "transparent",
   color: vars.textSoft,
@@ -428,7 +428,7 @@ export const chipRemove = style({
 export const dangerBanner = style({
   backgroundColor: `color-mix(in srgb, ${vars.danger} 8%, transparent)`,
   border: `1px solid ${vars.danger}`,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   padding: "1rem",
 });
 

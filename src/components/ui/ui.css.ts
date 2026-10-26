@@ -46,19 +46,18 @@ export const button = recipe({
     justifyContent: "center",
     gap: "0.5rem",
     whiteSpace: "nowrap",
-    borderRadius: 0,
-    fontSize: "0.8125rem",
+    borderRadius: "999px",
+    fontSize: "0.85rem",
     lineHeight: "1.25rem",
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: "0.04em",
-    transition: "color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease",
+    fontWeight: 500,
+    textDecoration: "none",
+    transition: "color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease",
     cursor: "pointer",
-    border: "1px solid transparent",
+    border: `1px solid ${vars.line}`,
     selectors: {
       "&:focus-visible": {
         outline: "none",
-        boxShadow: `0 0 0 2px ${vars.bg}, 0 0 0 4px ${vars.accent}`,
+        boxShadow: `0 0 0 4px ${vars.accentDim}`,
       },
       "&:disabled": {
         pointerEvents: "none",
@@ -68,35 +67,43 @@ export const button = recipe({
   },
   variants: {
     variant: {
+      /* Pills, as in the inbox app: accent-filled primary, raised hairline
+         pills that pick up an accent ring on hover for the rest. */
       default: {
         backgroundColor: vars.accent,
-        color: vars.bgDeep,
-        ":hover": { backgroundColor: vars.accentAlt },
+        borderColor: vars.accent,
+        color: "#fff",
+        fontWeight: 600,
+        ":hover": { filter: "brightness(1.12)" },
       },
       destructive: {
-        backgroundColor: "transparent",
+        backgroundColor: vars.surface,
         color: vars.danger,
-        border: `1px solid ${vars.danger}`,
-        ":hover": { backgroundColor: vars.danger, color: vars.bgDeep },
+        borderColor: "rgb(255 92 122 / 40%)",
+        ":hover": {
+          borderColor: vars.danger,
+          boxShadow: "0 0 0 4px rgb(255 92 122 / 14%)",
+        },
       },
       outline: {
-        border: `1px solid ${vars.surfaceHigher}`,
-        backgroundColor: "transparent",
-        color: vars.textSoft,
+        backgroundColor: vars.surface,
+        color: vars.text,
         ":hover": {
-          backgroundColor: vars.surfaceHi,
-          color: vars.text,
-          borderColor: vars.accent,
+          borderColor: vars.accentLine,
+          boxShadow: `0 0 0 4px ${vars.accentDim}`,
         },
       },
       secondary: {
         backgroundColor: vars.surface,
-        border: `1px solid ${vars.surfaceHigher}`,
-        color: vars.textSoft,
-        ":hover": { backgroundColor: vars.surfaceHi },
+        color: vars.text,
+        ":hover": {
+          borderColor: vars.accentLine,
+          boxShadow: `0 0 0 4px ${vars.accentDim}`,
+        },
       },
       ghost: {
         backgroundColor: "transparent",
+        borderColor: "transparent",
         color: vars.textSoft,
         ":hover": {
           backgroundColor: vars.surfaceHi,
@@ -105,9 +112,8 @@ export const button = recipe({
       },
       link: {
         backgroundColor: "transparent",
+        borderColor: "transparent",
         color: vars.accent,
-        textTransform: "none",
-        letterSpacing: "normal",
         fontWeight: 600,
         textUnderlineOffset: "4px",
         ":hover": { textDecoration: "underline" },
@@ -116,17 +122,15 @@ export const button = recipe({
     size: {
       default: {
         height: "2.5rem",
-        padding: "0.5rem 1rem"
+        padding: "0.45rem 0.95rem"
       },
       sm: {
         height: "2.25rem",
-        borderRadius: 0,
         padding: "0 0.75rem"
       },
       lg: {
         height: "2.75rem",
-        borderRadius: 0,
-        padding: "0 2rem"
+        padding: "0 1.5rem"
       },
       icon: {
         height: "2.5rem",
@@ -144,9 +148,10 @@ export const button = recipe({
 /* ============================================================================
    CARD
    ============================================================================ */
+/* Cards: the site's raised tiles — translucent, hairline, rounded. */
 export const card = style({
-  borderRadius: 0,
-  border: `1px solid ${vars.surfaceHigher}`,
+  borderRadius: vars.radius,
+  border: `1px solid ${vars.line}`,
   backgroundColor: vars.bgRaised,
   color: vars.text,
 });
@@ -189,19 +194,21 @@ export const input = style({
   display: "flex",
   height: "2.5rem",
   width: "100%",
-  borderRadius: 0,
-  border: `1px solid ${vars.surfaceHigher}`,
-  backgroundColor: vars.surface,
-  padding: "0.5rem 0.75rem",
+  borderRadius: vars.radiusSm,
+  border: `1px solid ${vars.line}`,
+  backgroundColor: "rgb(0 0 0 / 25%)",
+  padding: "0.55rem 0.75rem",
   fontSize: "1rem",
   color: vars.text,
+  transition: "border-color 0.15s ease, box-shadow 0.15s ease",
   "::placeholder": {
     color: vars.textDim,
   },
   selectors: {
     "&:focus-visible": {
       outline: "none",
-      boxShadow: `0 0 0 2px ${vars.bg}, 0 0 0 4px ${vars.accent}`,
+      borderColor: vars.accentLine,
+      boxShadow: `0 0 0 4px ${vars.accentDim}`,
     },
     "&:disabled": {
       cursor: "not-allowed",
@@ -229,7 +236,7 @@ export const badge = recipe({
   base: {
     display: "inline-flex",
     alignItems: "center",
-    borderRadius: 0,
+    borderRadius: "999px",
     border: "1px solid transparent",
     padding: "0.125rem 0.625rem",
     fontSize: "0.6875rem",
@@ -271,7 +278,7 @@ export const alert = recipe({
   base: {
     position: "relative",
     width: "100%",
-    borderRadius: 0,
+    borderRadius: vars.radiusSm,
     border: `1px solid ${vars.surfaceHigher}`,
     padding: "1rem",
   },
@@ -328,7 +335,7 @@ export const checkbox = style({
   height: "1rem",
   width: "1rem",
   flexShrink: 0,
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.accent}`,
   backgroundColor: "transparent",
   cursor: "pointer",
@@ -339,7 +346,7 @@ export const checkbox = style({
     },
     "&:focus-visible": {
       outline: "none",
-      boxShadow: `0 0 0 2px ${vars.bg}, 0 0 0 4px ${vars.accent}`,
+      boxShadow: `0 0 0 4px ${vars.accentDim}`,
     },
     "&:disabled": {
       cursor: "not-allowed",
@@ -361,7 +368,7 @@ export const checkboxIndicator = style({
 export const tooltipContent = style({
   zIndex: 50,
   overflow: "hidden",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   backgroundColor: vars.bgDeep,
   padding: "0.375rem 0.75rem",
@@ -384,7 +391,7 @@ export const selectTrigger = style({
   width: "100%",
   alignItems: "center",
   justifyContent: "space-between",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   backgroundColor: vars.surface,
   color: vars.text,
@@ -394,7 +401,7 @@ export const selectTrigger = style({
   selectors: {
     "&:focus": {
       outline: "none",
-      boxShadow: `0 0 0 2px ${vars.bg}, 0 0 0 4px ${vars.accent}`,
+      boxShadow: `0 0 0 4px ${vars.accentDim}`,
     },
     "&:disabled": {
       cursor: "not-allowed",
@@ -429,9 +436,11 @@ export const selectContent = style({
   maxHeight: "24rem",
   minWidth: "8rem",
   overflow: "hidden",
-  borderRadius: 0,
-  border: `1px solid ${vars.surfaceHigher}`,
-  backgroundColor: vars.bgDeep,
+  borderRadius: vars.radiusSm,
+  border: `1px solid ${vars.line}`,
+  backgroundColor: vars.panel,
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
   color: vars.text,
   animation: `${fadeZoomIn} 0.15s ease`,
   selectors: {
@@ -466,7 +475,7 @@ export const selectItem = style({
   cursor: "default",
   userSelect: "none",
   alignItems: "center",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   padding: "0.375rem 0.5rem 0.375rem 2rem",
   fontSize: "0.875rem",
   outline: "none",
@@ -552,7 +561,7 @@ export const toastRoot = recipe({
     justifyContent: "space-between",
     gap: "1rem",
     overflow: "hidden",
-    borderRadius: 0,
+    borderRadius: vars.radiusSm,
     border: `1px solid ${vars.surfaceHigher}`,
     padding: "1.5rem",
     paddingRight: "2rem",
@@ -606,7 +615,7 @@ export const toastAction = style({
   flexShrink: 0,
   alignItems: "center",
   justifyContent: "center",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   border: `1px solid ${vars.surfaceHigher}`,
   backgroundColor: "transparent",
   padding: "0 0.75rem",
@@ -631,7 +640,7 @@ export const toastClose = style({
   position: "absolute",
   right: "0.5rem",
   top: "0.5rem",
-  borderRadius: 0,
+  borderRadius: vars.radiusSm,
   padding: "0.25rem",
   color: mix(vars.text, 50),
   opacity: 0,

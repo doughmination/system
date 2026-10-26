@@ -23,6 +23,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { normalizeColor, readableOnDark } from "@/lib/utils";
 import { findPrideFlag, prideSwatchGradient } from "@/lib/pride";
 import * as s from "./member.css";
+import { ChevronLeft } from "lucide-react";
 
 const FALLBACK_AVATAR = "https://raw.doughmination.gay/favicons/favicon.png";
 
@@ -230,7 +231,7 @@ export default function MemberDetails() {
                               display: "inline-block",
                               width: "0.8rem",
                               height: "0.8rem",
-                              borderRadius: 0,
+                              borderRadius: "var(--radius-sm)",
                               marginRight: "0.4rem",
                               verticalAlign: "middle",
                               background: swatch,
@@ -264,7 +265,7 @@ export default function MemberDetails() {
                         alignItems: "center",
                         gap: "0.4rem",
                         padding: "0.25rem 0.6rem 0.25rem 0.3rem",
-                        borderRadius: 0,
+                        borderRadius: "var(--radius-sm)",
                         border: "1px solid var(--surface-higher)",
                         textDecoration: "none",
                         color: "var(--text)",
@@ -277,7 +278,7 @@ export default function MemberDetails() {
                         style={{
                           width: "1.5rem",
                           height: "1.5rem",
-                          borderRadius: 0,
+                          borderRadius: "var(--radius-sm)",
                           objectFit: "cover",
                         }}
                         onError={(event) => {
@@ -305,17 +306,7 @@ export default function MemberDetails() {
                 }
               >
                 <Link href="/">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.4}
-                    style={{ marginRight: "0.4rem", verticalAlign: "-1px" }}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                  </svg>
+                  <ChevronLeft size={12} strokeWidth={2.4} style={{ marginRight: "0.4rem", verticalAlign: "-1px" }} />
                   Back to Members
                 </Link>
               </Button>

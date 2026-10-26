@@ -5,13 +5,14 @@
   "scripts": {
     "dev": "next dev --turbo",
     "dev:webpack": "next dev --webpack",
-    "build": "next build --turbo",
+    "build": "opennextjs-cloudflare build",
+    "build:next": "next build --turbo",
     "build:webpack": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "preview": "bun run build && opennextjs-cloudflare preview",
+    "deploy": "bun run build && opennextjs-cloudflare deploy",
+    "upload": "bun run build && opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
@@ -27,9 +28,9 @@
     "@vanilla-extract/recipes": "^0.5.7",
     "clsx": "^2.1.1",
     "doughmination-api": "^1.6.0",
+    "lucide-react": "1.54.0",
     "next": "16.2.12",
     "react": "19.2.8",
-    "react-bootstrap-icons": "^1.11.6",
     "react-dom": "19.2.8",
     "recharts": "^3.10.1",
     "sonner": "^2.0.7"
