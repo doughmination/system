@@ -8,7 +8,6 @@ import type { Metadata, Viewport } from "next";
 import "@/styles/theme.css";
 import "@/styles/global.css";
 import Providers from "./providers";
-import SoundFX from "./SoundFX";
 // import VisitorTracker from "@/components/VisitorTracker";
 
 export const metadata: Metadata = {
@@ -82,7 +81,6 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
-        <SoundFX />
       </body>
     </html>
   );
