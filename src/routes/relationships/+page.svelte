@@ -5,46 +5,24 @@
 -->
 
 <script lang="ts">
-  import type { PluralMember } from "doughmination-api/server";
-  import { fallbackAvatar, memberName } from "#lib";
-  import { normalizeColor } from "#lib/colour.ts";
+  import { avatarFallback, fallbackAvatar, memberName } from "#lib";
   import PageHead from "#lib/components/PageHead.svelte";
+  import RelationshipGraph from "#lib/components/RelationshipGraph.svelte";
 
   let { data } = $props();
 
-  const SIZE = 720;
-  const CENTER = SIZE / 2;
-  const RING_RADIUS = 280;
-  const NODE_RADIUS = 34;
-
-  const byId = $derived.by(() => {
-    const lookup = new Map<string, PluralMember>();
-    for (const member of data.members) {
-      if (member.id) lookup.set(member.id, member);
-      if (member.name) lookup.set(member.name, member);
-    }
-    return lookup;
-  });
-
-  // Everyone in a relationship, spaced evenly round a ring
-  const nodes = $derived.by(() => {
-    const involved = new Set(data.relationships.flatMap((edge) => edge.members));
-    const resolved = [...involved].map((id) => byId.get(id)).filter((m): m is PluralMember => Boolean(m));
-    const unique = [...new Map(resolved.map((m) => [m.id, m])).values()];
-
-    return unique.map((member, index) => {
-      const angle = (index / Math.max(unique.length, 1)) * Math.PI * 2 - Math.PI / 2;
-      return {
-        member,
-        x: CENTER + RING_RADIUS * Math.cos(angle),
-        y: CENTER + RING_RADIUS * Math.sin(angle),
-      };
-    });
-  });
-
-  function nodeFor(identifier: string) {
-    return nodes.find((node) => node.member.id === identifier || node.member.name === identifier);
+  function find(identifier: string) {
+    return data.members.find((member) => member.id === identifier || member.name === identifier);
   }
+
+  // The same links as the map, as a plain list
+  const pairs = $derived(
+    data.relationships.flatMap((edge) => {
+      const a = find(edge.members[0]);
+      const b = find(edge.members[1]);
+      return a && b ? [{ edge, a, b }] : [];
+    }),
+  );
 </script>
 
 <svelte:head>
@@ -62,63 +40,68 @@
     }}
   />
 
-  {#if nodes.length === 0}
+  {#if pairs.length === 0}
     <p class="panel muted">No relationships to show yet</p>
   {:else}
-    <section class="panel map">
-      <svg viewBox="0 0 {SIZE} {SIZE}" width="100%" role="img" aria-label="Relationship map">
-        <defs>
-          {#each nodes as node (node.member.id)}
-            <clipPath id="clip-{node.member.id}">
-              <circle cx={node.x} cy={node.y} r={NODE_RADIUS} />
-            </clipPath>
-          {/each}
-        </defs>
+    <section class="panel">
+      <RelationshipGraph members={data.members} relationships={data.relationships} />
+    </section>
 
-        {#each data.relationships as edge (edge.id)}
-          {@const from = nodeFor(edge.members[0])}
-          {@const to = nodeFor(edge.members[1])}
-          {#if from && to}
-            <line x1={from.x} y1={from.y} x2={to.x} y2={to.y} stroke="var(--accent)" stroke-width="2" stroke-opacity="0.55" />
-            <text x={(from.x + to.x) / 2} y={(from.y + to.y) / 2 - 4} text-anchor="middle" font-size="11" fill="var(--muted)">
-              {edge.type}
-            </text>
-          {/if}
+    <section class="panel">
+      <h2>Everyone, in pairs</h2>
+      <ul class="pairs">
+        {#each pairs as pair (pair.edge.id)}
+          <li>
+            <a class="who" href="/{pair.a.name ?? pair.a.id}">
+              <img class="member-avatar avatar-sm" src={pair.a.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />{memberName(pair.a)}
+            </a>
+            <span class="badge" class:accent={pair.edge.type !== "crush"}>{pair.edge.type}</span>
+            <a class="who" href="/{pair.b.name ?? pair.b.id}">
+              <img class="member-avatar avatar-sm" src={pair.b.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />{memberName(pair.b)}
+            </a>
+            {#if pair.edge.since}<span class="muted small">since {pair.edge.since}</span>{/if}
+          </li>
         {/each}
-
-        {#each nodes as node (node.member.id)}
-          <a href="/{node.member.name ?? node.member.id}">
-            <circle
-              cx={node.x}
-              cy={node.y}
-              r={NODE_RADIUS + 2}
-              fill="var(--bg)"
-              stroke={normalizeColor(node.member.color) ?? "var(--accent)"}
-              stroke-width="2"
-            />
-            <image
-              href={node.member.avatar_url || fallbackAvatar}
-              x={node.x - NODE_RADIUS}
-              y={node.y - NODE_RADIUS}
-              width={NODE_RADIUS * 2}
-              height={NODE_RADIUS * 2}
-              clip-path="url(#clip-{node.member.id})"
-              preserveAspectRatio="xMidYMid slice"
-            />
-            <text x={node.x} y={node.y + NODE_RADIUS + 16} text-anchor="middle" font-size="13" fill="var(--text)">
-              {memberName(node.member)}
-            </text>
-          </a>
-        {/each}
-      </svg>
+      </ul>
     </section>
   {/if}
 </div>
 
 <style>
-  .map svg {
-    display: block;
-    max-width: 720px;
-    margin: 0 auto;
+  h2 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .pairs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    gap: 0.6rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pairs li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .who {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .who:hover {
+    color: var(--accent);
+  }
+
+  .avatar-sm {
+    width: 1.75rem;
+    height: 1.75rem;
   }
 </style>
