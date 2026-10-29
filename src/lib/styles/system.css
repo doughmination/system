@@ -1,0 +1,250 @@
+/* src/lib/styles/system.css
+ * Copyright (c) 2026 Clove Nytrix Doughmination Twilight
+ * Licensed under the DASL-1.0 Licence.
+ * See LICENCE.md in the project root for full licence information.
+ */
+
+/* The system's own pieces, in the doughmination.gay look */
+
+.with-icon {
+  display: inline-flex;
+  gap: 0.4em;
+  align-items: center;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.page-head h1,
+.panel h1 {
+  margin: 0;
+}
+
+/* Member avatars: a square photo with the member's own colour as its ring */
+
+.member-avatar {
+  display: block;
+  object-fit: cover;
+  border: 2px solid var(--member-color, var(--accent));
+  border-radius: 1rem;
+  background: var(--raised);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--member-color, var(--accent)) 18%, transparent);
+}
+
+.avatar-sm {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-width: 1px;
+  border-radius: 0.6rem;
+  box-shadow: none;
+}
+
+/* Chips: tags, identities, filters */
+
+.chip {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raised);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--accent-line);
+  color: var(--text);
+}
+
+.chip.active {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* Member status: an emoji and a line of text */
+
+.status-tag {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  max-width: 100%;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: rgb(0 0 0 / 25%);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.status-tag span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mental state */
+
+.mental {
+  --state: var(--ok);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--state) 45%, transparent);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--state) 8%, var(--raised));
+}
+
+.mental-unstable,
+.mental-idealizing {
+  --state: var(--warn);
+}
+
+.mental-self-harming,
+.mental-highly-at-risk {
+  --state: var(--bad);
+}
+
+.mental iconsax-icon {
+  color: var(--state);
+}
+
+.mental p {
+  margin: 0;
+}
+
+.mental-label {
+  color: var(--state);
+  font-weight: 600;
+}
+
+/* Lists of members to pick from */
+
+.pick-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 32rem;
+  overflow-y: auto;
+}
+
+.pick {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--raised);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pick:hover {
+  border-color: var(--accent-line);
+}
+
+.pick.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-dim);
+}
+
+.pick p {
+  margin: 0;
+}
+
+/* Admin tiles, like web's contact tiles */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--raised);
+  text-decoration: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tile:hover,
+.tile:focus-visible {
+  border-color: var(--accent-line);
+  box-shadow: 0 0 0 4px var(--accent-dim);
+  transform: translateY(-2px);
+}
+
+.tile-icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.tile h3,
+.tile p {
+  margin: 0;
+}
+
+.tile p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 52rem) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+  }
+
+  .tile:hover,
+  .tile:focus-visible {
+    transform: none;
+  }
+}
