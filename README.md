@@ -6,59 +6,44 @@ through the Doughmination API, so pages render fresh on every request.
 
 ## Tech stack
 
-- [Next.js 16](https://nextjs.org/) (App Router, React 19)
-- [vanilla-extract](https://vanilla-extract.style/) for styling
-- [TanStack Query](https://tanstack.com/query) + `doughmination-api` for data
-- Deployed to **Cloudflare Workers** via [OpenNext](https://opennext.js.org/cloudflare)
+- [SvelteKit](https://svelte.dev/docs/kit) (Svelte 5)
+- Plain CSS, shared with [doughmination.gay](https://doughmination.gay)
+- `doughmination-api/server`'s typed client for data, plus its live socket
+- Deployed to **Cloudflare Workers** via `@sveltejs/adapter-cloudflare`
 
 ## Local development
 
 ```bash
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
-Runs the Next.js dev server at http://localhost:3000.
+Runs the Vite dev server at http://localhost:5173.
 
 To preview in the real Workers runtime (closer to production):
 
 ```bash
-npm run preview
+bun run preview
 ```
 
 ## Deploy
 
-Deployed to Cloudflare Workers with the OpenNext adapter — **not** Pages / next-on-pages.
-
 ```bash
-npm run deploy
+bun run deploy
 ```
 
-This runs `opennextjs-cloudflare build` (which wraps `next build`) and then
-`wrangler deploy`. First run will prompt `wrangler login`.
-
-Alternatively, connect the repo as a **Workers** project in the Cloudflare
-dashboard with:
-
-- Build command: `npx opennextjs-cloudflare build`
-- Deploy command: `npx wrangler deploy`
-
-Worker config lives in [`wrangler.jsonc`](./wrangler.jsonc); adapter options in
-[`open-next.config.ts`](./open-next.config.ts). Member pages (`/[member_id]`) are
+This runs `vite build` and then `wrangler deploy`. Worker config lives in
+[`wrangler.jsonc`](./wrangler.jsonc). Member pages (`/[member_id]`) are
 server-rendered on demand so Discord embeds and live data stay current with no
-rebuild.
+rebuild; signed-in pages (`/user`, `/admin`, `/owner`) render in the browser,
+since the API token lives in `localStorage`.
 
 ## Scripts
 
 | Script            | Description                                |
 | ----------------- | ------------------------------------------ |
-| `npm run dev`     | Next.js dev server (Turbopack)             |
-| `npm run build`   | Plain `next build`                         |
-| `npm run preview` | Build + serve in the local Workers runtime |
-| `npm run deploy`  | Build + deploy to Cloudflare Workers       |
-| `npm run lint`    | ESLint                                     |
-
-## Contributing & licence
-
-See [Contributing.md](./Contributing.md), [Security.md](./Security.md), and
-[Licence.md](./Licence.md).
+| `bun run dev`     | Vite dev server                            |
+| `bun run build`   | Production build for Workers               |
+| `bun run preview` | Build + serve in the local Workers runtime |
+| `bun run deploy`  | Build + deploy to Cloudflare Workers       |
+| `bun run check`   | svelte-check type checking                 |
