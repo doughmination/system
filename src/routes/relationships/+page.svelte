@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import type { PluralMember } from "doughmination-api/server";
   import { avatarFallback, fallbackAvatar, memberName } from "#lib";
   import PageHead from "#lib/components/PageHead.svelte";
   import RelationshipGraph from "#lib/components/RelationshipGraph.svelte";
@@ -16,14 +17,27 @@
     return data.members.find((member) => member.id === identifier || member.name === identifier);
   }
 
-  // The same links as the map, as a plain list
-  const pairs = $derived(
-    data.relationships.flatMap((edge) => {
+  // The same links as the map, as a plain list. Two crushes on each other
+  // fold into one mutual crush
+  const pairs = $derived.by(() => {
+    const list: { edge: (typeof data.relationships)[number]; a: PluralMember; b: PluralMember; mutual: boolean }[] = [];
+    for (const edge of data.relationships) {
       const a = find(edge.members[0]);
       const b = find(edge.members[1]);
-      return a && b ? [{ edge, a, b }] : [];
-    }),
-  );
+      if (!a || !b) continue;
+      const reverse =
+        edge.type === "crush" &&
+        list.find((pair) => pair.edge.type === "crush" && pair.a.id === b.id && pair.b.id === a.id);
+      if (reverse) reverse.mutual = true;
+      else list.push({ edge, a, b, mutual: false });
+    }
+    return list;
+  });
+
+  function label(pair: (typeof pairs)[number]): string {
+    if (pair.edge.type !== "crush") return pair.edge.type;
+    return pair.mutual ? "mutual crush" : "has a crush on";
+  }
 </script>
 
 <svelte:head>
@@ -61,7 +75,7 @@
             <a class="who" href="/{pair.a.name ?? pair.a.id}">
               <img class="member-avatar avatar-sm" src={pair.a.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />{memberName(pair.a)}
             </a>
-            <span class="badge" class:accent={pair.edge.type !== "crush"}>{pair.edge.type}</span>
+            <span class="badge" class:accent={pair.edge.type !== "crush"}>{label(pair)}</span>
             <a class="who" href="/{pair.b.name ?? pair.b.id}">
               <img class="member-avatar avatar-sm" src={pair.b.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />{memberName(pair.b)}
             </a>

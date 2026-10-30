@@ -40,11 +40,18 @@
       return index;
     };
 
-    const links = relationships.flatMap((edge) => {
+    // Two crushes on each other fold into one mutual line, arrowed both ends
+    const links: { edge: Relationship; a: number; b: number; mutual: boolean }[] = [];
+    for (const edge of relationships) {
       const a = indexOf(edge.members[0]);
       const b = indexOf(edge.members[1]);
-      return a === null || b === null || a === b ? [] : [{ edge, a, b }];
-    });
+      if (a === null || b === null || a === b) continue;
+      const reverse =
+        edge.type === "crush" &&
+        links.find((link) => link.edge.type === "crush" && link.a === b && link.b === a);
+      if (reverse) reverse.mutual = true;
+      else links.push({ edge, a, b, mutual: false });
+    }
 
     return {
       nodes,
@@ -179,6 +186,10 @@
       <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.12" />
       <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
     </radialGradient>
+    <!-- Crushes are one way, so their lines end in an arrow -->
+    <marker id="crush-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--warn)" />
+    </marker>
     {#each graph.nodes as node, index (node.id)}
       {@const at = screen(index)}
       <clipPath id="avatar-{node.id}">
@@ -194,18 +205,31 @@
     {@const from = screen(link.a)}
     {@const to = screen(link.b)}
     {@const lit = hovered !== null && (link.a === hovered || link.b === hovered)}
+    {@const crush = link.edge.type === "crush"}
+    <!-- Stop a crush short of the avatar, so its arrow isn't hidden under it -->
+    {@const length = Math.max(Math.hypot(to.x - from.x, to.y - from.y), 1)}
+    {@const gapEnd = crush ? (to.r + 5) / length : 0}
+    {@const gapStart = link.mutual ? (from.r + 5) / length : 0}
     <line
-      x1={from.x}
-      y1={from.y}
-      x2={to.x}
-      y2={to.y}
+      x1={from.x + (to.x - from.x) * gapStart}
+      y1={from.y + (to.y - from.y) * gapStart}
+      x2={to.x - (to.x - from.x) * gapEnd}
+      y2={to.y - (to.y - from.y) * gapEnd}
+      marker-start={link.mutual ? "url(#crush-arrow)" : undefined}
+      marker-end={crush ? "url(#crush-arrow)" : undefined}
       class="link"
-      class:crush={link.edge.type === "crush"}
+      class:crush
       class:lit
       class:dim={hovered !== null && !lit}
       stroke-opacity={(from.fade + to.fade) / 2}
     >
-      <title>{memberName(graph.nodes[link.a]!)} &amp; {memberName(graph.nodes[link.b]!)}: {link.edge.type}</title>
+      <title>
+        {link.mutual
+          ? `${memberName(graph.nodes[link.a]!)} & ${memberName(graph.nodes[link.b]!)}: mutual crush`
+          : crush
+          ? `${memberName(graph.nodes[link.a]!)} has a crush on ${memberName(graph.nodes[link.b]!)}`
+          : `${memberName(graph.nodes[link.a]!)} & ${memberName(graph.nodes[link.b]!)}: ${link.edge.type}`}
+      </title>
     </line>
   {/each}
 
@@ -243,7 +267,7 @@
 
 <p class="legend muted small">
   <span><svg width="28" height="8" aria-hidden="true"><line x1="0" y1="4" x2="28" y2="4" class="link" /></svg> partner</span>
-  <span><svg width="28" height="8" aria-hidden="true"><line x1="0" y1="4" x2="28" y2="4" class="link crush" /></svg> crush</span>
+  <span><svg width="28" height="8" aria-hidden="true"><line x1="0" y1="4" x2="28" y2="4" class="link crush" /></svg> crush (one way)</span>
   <span>Drag to turn · hover someone to see their links</span>
 </p>
 

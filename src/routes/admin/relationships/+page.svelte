@@ -89,7 +89,7 @@
   }
 
   async function remove(edge: Relationship) {
-    const pair = `${labelFor(edge.members[0])} & ${labelFor(edge.members[1])}`;
+    const pair = `${labelFor(edge.members[0])} ${edge.type === "crush" ? "→" : "&"} ${labelFor(edge.members[1])}`;
     if (!confirm(`Remove the relationship between ${pair}?`)) return;
 
     saving = true;
@@ -141,7 +141,8 @@
           {#each relationships as edge (edge.id)}
             <div class="edge">
               <div class="grow">
-                <p>{labelFor(edge.members[0])} &amp; {labelFor(edge.members[1])}</p>
+                <!-- Crushes are one way, from the first member to the second -->
+                <p>{labelFor(edge.members[0])} {edge.type === "crush" ? "→" : "&"} {labelFor(edge.members[1])}</p>
                 <p class="muted small">{edge.type}{edge.since ? ` · since ${edge.since}` : ""}</p>
               </div>
               <button type="button" class="small danger" disabled={saving} onclick={() => remove(edge)}>Remove</button>
@@ -153,9 +154,9 @@
 
         <section class="panel">
           <h2>Add relationship</h2>
-          <p class="muted small">Link two members. A member can have many.</p>
-          <MemberSelect id="member-a" label="First member" {members} bind:value={memberA} by="id" />
-          <MemberSelect id="member-b" label="Second member" {members} bind:value={memberB} by="id" />
+          <p class="muted small">Link two members. A member can have many. Crushes are one way.</p>
+          <MemberSelect id="member-a" label={type === "crush" ? "Who has the crush" : "First member"} {members} bind:value={memberA} by="id" />
+          <MemberSelect id="member-b" label={type === "crush" ? "Who they have a crush on" : "Second member"} {members} bind:value={memberB} by="id" />
           <label class="field">
             <span>Type</span>
             <select bind:value={type}>

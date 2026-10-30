@@ -47,6 +47,7 @@
   title={name}
   {description}
   image={avatar}
+  colour={member.color}
 />
 
 <div class="page narrow">
@@ -100,6 +101,21 @@
             <a class="chip partner" href="/{partner.name ?? partner.id}">
               <img src={partner.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />
               {memberName(partner)}
+            </a>
+          {/each}
+        </div>
+      </section>
+    {/if}
+
+    {#if data.crushes.length}
+      <section>
+        <h2 style:color={nameColour}>Crushes</h2>
+        <div class="chips">
+          {#each data.crushes as crush (crush.id)}
+            <a class="chip partner" href="/{crush.name ?? crush.id}">
+              <img src={crush.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />
+              {memberName(crush)}
+              {#if crush.mutual}<span class="badge accent">mutual</span>{/if}
             </a>
           {/each}
         </div>

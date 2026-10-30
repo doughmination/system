@@ -30,14 +30,22 @@ export const load: PageLoad = async ({ fetch, params, depends }) => {
   }
 
   const isThis = (identifier: string) => identifier === member.id || identifier === member.name;
+  // Crushes aren't partners, so they get their own section. They only go one
+  // way: the first member has a crush on the second, so they only show there
   const partnerIds: string[] = [];
+  const crushIds: string[] = [];
+  const crushedByIds: string[] = [];
   for (const edge of relationships?.relationships ?? []) {
-    if (isThis(edge.members[0])) partnerIds.push(edge.members[1]);
+    if (edge.type === "crush") {
+      if (isThis(edge.members[0])) crushIds.push(edge.members[1]);
+      else if (isThis(edge.members[1])) crushedByIds.push(edge.members[0]);
+    } else if (isThis(edge.members[0])) partnerIds.push(edge.members[1]);
     else if (isThis(edge.members[1])) partnerIds.push(edge.members[0]);
   }
-  const partners = partnerIds
-    .map((identifier) => members.find((m) => m.id === identifier || m.name === identifier))
-    .filter((m): m is PluralMember => Boolean(m));
+  const toMembers = (ids: string[]) =>
+    ids
+      .map((identifier) => members.find((m) => m.id === identifier || m.name === identifier))
+      .filter((m): m is PluralMember => Boolean(m));
 
   return {
     id,
@@ -45,6 +53,11 @@ export const load: PageLoad = async ({ fetch, params, depends }) => {
       ...member,
       status: status?.status ?? member.status ?? null,
     },
-    partners,
+    partners: toMembers(partnerIds),
+    // A crush that goes both ways is mutual
+    crushes: toMembers(crushIds).map((crush) => ({
+      ...crush,
+      mutual: toMembers(crushedByIds).some((m) => m.id === crush.id),
+    })),
   };
 };

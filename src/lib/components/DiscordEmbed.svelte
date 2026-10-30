@@ -7,19 +7,29 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { fallbackAvatar, mainSite, siteName, siteUrl } from "#lib";
+  import { normalizeColor } from "#lib/colour.ts";
 
   let {
     title,
     description,
     image = fallbackAvatar,
+    colour = null,
   }: {
     title: string;
     description: string;
     image?: string;
+    colour?: string | null;
   } = $props();
 
   // Matches --accent in theme.css
   const accentColour = 0xeb459e;
+
+  // Discord wants an integer; fall back to the accent for unset or non-hex colours
+  const embedColour = $derived.by(() => {
+    const hex = normalizeColor(colour)?.slice(1) ?? "";
+    const full = hex.length === 3 ? hex.split("").map((c) => c + c).join("") : hex;
+    return /^[0-9a-fA-F]{6}$/.test(full) ? parseInt(full, 16) : accentColour;
+  });
 
   // Keeps the whole embed well under Discord's 3,000 byte cap
   const maxDescription = 1000;
@@ -36,7 +46,7 @@
   const componentEmbed = $derived({
     component: {
       type: 17,
-      accent_color: accentColour,
+      accent_color: embedColour,
       components: [
         {
           type: 9,
