@@ -8,6 +8,7 @@
   import { avatarFallback, fallbackAvatar, memberName } from "#lib";
   import PageHead from "#lib/components/PageHead.svelte";
   import RelationshipGraph from "#lib/components/RelationshipGraph.svelte";
+  import DiscordEmbed from "#lib/components/DiscordEmbed.svelte";
 
   let { data } = $props();
 
@@ -28,6 +29,11 @@
 <svelte:head>
   <title>Relationship Map · Doughmination System</title>
 </svelte:head>
+
+<DiscordEmbed
+  title="Relationship Map"
+  description="Who is dating who across the system."
+/>
 
 <div class="page">
   <PageHead

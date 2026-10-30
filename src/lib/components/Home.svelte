@@ -12,6 +12,7 @@
   import { normalizeColor, readableOnDark } from "#lib/colour.ts";
   import { live } from "#lib/live.svelte.ts";
   import PrideSwatch from "#lib/components/PrideSwatch.svelte";
+  import DiscordEmbed from "#lib/components/DiscordEmbed.svelte";
 
   let {
     members: rawMembers,
@@ -132,6 +133,11 @@
   <meta property="og:image" content={fallbackAvatar} />
   <meta name="twitter:card" content="summary" />
 </svelte:head>
+
+<DiscordEmbed
+  title="Doughmination System"
+  description="Real-time plural system tracker. View current fronters and members of the Doughmination System."
+/>
 
 <div class="page">
   {#if live.status === "reconnecting"}

@@ -8,6 +8,7 @@
   import { avatarFallback, fallbackAvatar, memberName, siteName, siteUrl } from "#lib";
   import { normalizeColor, readableOnDark } from "#lib/colour.ts";
   import PrideSwatch from "#lib/components/PrideSwatch.svelte";
+  import DiscordEmbed from "#lib/components/DiscordEmbed.svelte";
 
   let { data } = $props();
 
@@ -41,6 +42,12 @@
   <meta property="og:image:alt" content={name} />
   <meta name="twitter:card" content="summary" />
 </svelte:head>
+
+<DiscordEmbed
+  title={name}
+  {description}
+  image={avatar}
+/>
 
 <div class="page narrow">
   <article class="panel member" style:--member-color={colour ?? "var(--accent)"}>
