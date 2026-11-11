@@ -32,7 +32,7 @@
   <p class="trademark">
     Doughmination System® is a trade mark in the United Kingdom under trademark number
     <a
-      href="https://www.ipo.gov.uk/t-tmj.htm/t-tmj/tm-journals/2025-039/UK00004263144.html"
+      href="https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00004263144"
       target="_blank"
       rel="noopener noreferrer">UK00004263144</a
     >
