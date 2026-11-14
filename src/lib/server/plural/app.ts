@@ -11,8 +11,6 @@ import type { Env } from "./hono";
 import { HttpError } from "./errors";
 import { corsOrigins, isLocalhostOrigin } from "./config";
 import { initializeAdminUser } from "./services/users";
-import { importLegacyStore } from "./services/importer";
-import { rt } from "./runtime";
 
 import { authRoutes } from "./routes/auth";
 import { systemRoutes } from "./routes/system";
@@ -23,18 +21,13 @@ import { frontingRoutes } from "./routes/fronting";
 import { usersRoutes } from "./routes/users";
 import { metricsRoutes } from "./routes/metrics";
 import { adminRoutes } from "./routes/admin";
-import { botRoutes } from "./routes/bot";
 
-// First run on an empty database: copy users and sessions from the old api Worker,
-// so people stay signed in. Otherwise seed the owner. Once per isolate
+// Seed the owner account once per isolate
 let seeded = false;
 async function ensureSeeded(): Promise<void> {
   if (seeded) return;
   seeded = true;
   try {
-    if ((await rt().store.get<unknown[]>("users", [])).length === 0) {
-      await importLegacyStore().catch((err) => console.warn(`Legacy import skipped: ${String(err)}`));
-    }
     await initializeAdminUser();
   } catch (err) {
     seeded = false;
@@ -52,7 +45,6 @@ plural.route("/", frontingRoutes);
 plural.route("/", usersRoutes);
 plural.route("/", metricsRoutes);
 plural.route("/", adminRoutes);
-plural.route("/", botRoutes);
 
 export const app = new OpenAPIHono<Env>().basePath("/api");
 
@@ -86,12 +78,6 @@ app.openAPIRegistry.registerComponent("securitySchemes", "bearerAuth", {
   scheme: "bearer",
   bearerFormat: "JWT",
   description: "The token from an SSO sign-in (24 hours). Some routes also need the admin, owner or pet role",
-});
-
-app.openAPIRegistry.registerComponent("securitySchemes", "botAuth", {
-  type: "http",
-  scheme: "bearer",
-  description: "The DOUGH_BOT_TOKEN secret, sent with a 'User-Agent: CloveShortcuts/<version>' header",
 });
 
 app.doc31("/openapi.json", {

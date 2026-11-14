@@ -26,7 +26,7 @@ async function enrichedFronters(): Promise<Fronters> {
   return { ...fronters, members: await enrichMembersWithStatus(withTags) } as Fronters;
 }
 
-// Switch, then tell every connected page. Shared with the bot routes
+// Switch, then tell every connected page
 export async function switchAndBroadcast(memberIds: string[]): Promise<Fronters> {
   await setFront(memberIds);
   const fronters = await enrichedFronters();

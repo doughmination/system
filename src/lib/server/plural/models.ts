@@ -114,7 +114,7 @@ export const MentalStateSchema = z.object({
 export type MentalState = z.infer<typeof MentalStateSchema>;
 
 // ============================================================================
-// BOT MODELS
+// SWITCH MODELS
 // ============================================================================
 
 export const MultiSwitchRequestSchema = z.object({

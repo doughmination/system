@@ -47,9 +47,8 @@
     "CORS_ORIGINS": "",
 
     // Doughmination SSO. Secrets: SSO_CLIENT_ID, SSO_CLIENT_SECRET, JWT_SECRET
-    // The redirect stays on doughmination.uk, which forwards /v2/plural/* here
     "SSO_ISSUER": "https://auth.doughmination.gay",
-    "SSO_REDIRECT_URI": "https://doughmination.uk/v2/plural/auth/sso/callback",
+    "SSO_REDIRECT_URI": "https://doughmination.co.uk/api/plural/auth/sso/callback",
     "SSO_SCOPES": "openid profile email offline_access",
     "SSO_POST_LOGIN_URL": "https://doughmination.co.uk/user/login/callback",
     "SSO_POST_LOGOUT_REDIRECT_URI": "https://doughmination.co.uk/"

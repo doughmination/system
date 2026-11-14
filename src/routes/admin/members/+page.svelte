@@ -210,16 +210,6 @@
       return `Imported ${report.members} members and ${report.switches} switches, copied ${report.media_copied} image(s)${failed}`;
     }, "Import failed");
   }
-
-  function importLegacy() {
-    if (!confirm("Copy users, tags, statuses, pride, relationships, mental state and sessions from the old API? Existing values here are overwritten.")) return;
-
-    void run(async () => {
-      const report = await authFetch<{ imported: string[] }>("/plural/admin/import/legacy", { method: "POST" }, "Legacy import failed");
-      await auth.refresh();
-      return `Copied ${report.imported.length} item(s) from the old API`;
-    }, "Legacy import failed");
-  }
 </script>
 
 <svelte:head>
@@ -314,10 +304,6 @@
               <button type="submit" class="primary" disabled={saving || !importFile?.length}>Import export</button>
             </div>
           </form>
-
-          <div class="buttons">
-            <button type="button" disabled={saving} onclick={importLegacy}>Copy data from the old API</button>
-          </div>
         </section>
       {/if}
     {/if}

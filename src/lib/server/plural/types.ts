@@ -7,8 +7,6 @@
 // The api Worker's `Hub` entrypoint, reached over the HUB service binding
 export interface HubRpc {
   broadcast(data: unknown): Promise<void>;
-  // Every key in the old SystemState DO store, for the one-time import
-  exportLegacy(): Promise<Record<string, unknown>>;
 }
 
 export interface PluralEnv {
@@ -20,7 +18,6 @@ export interface PluralEnv {
   JWT_SECRET?: string;
   SSO_CLIENT_ID?: string;
   SSO_CLIENT_SECRET?: string;
-  DOUGH_BOT_TOKEN?: string;
 
   // Vars
   SSO_ISSUER?: string;

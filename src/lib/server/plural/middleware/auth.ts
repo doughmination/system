@@ -16,7 +16,6 @@ import { decodeAccessToken } from "../security";
 import { HttpError } from "../errors";
 import { getUserByUsername } from "../services/users";
 import { currentSsoSession } from "../services/sso_sessions";
-import { verifyBotToken } from "../services/keys";
 import type { User } from "../models";
 
 function extractBearer(c: Context<Env>): string | undefined {
@@ -86,33 +85,5 @@ export async function requireOwner(c: Context<Env>, next: Next): Promise<void> {
 export async function requirePet(c: Context<Env>, next: Next): Promise<void> {
   const user = c.get("user") as User | undefined;
   if (!user?.is_pet) throw new HttpError(403, "Pet privileges required");
-  await next();
-}
-
-/**
- * Verify Discord bot access: `Authorization: Bearer <DOUGH_BOT_TOKEN>` plus a
- * `User-Agent: CloveShortcuts/<version>` header.
- */
-export async function verifyBotAccess(c: Context<Env>, next: Next): Promise<void> {
-  const userAgent = c.req.header("User-Agent");
-  const authorization = c.req.header("Authorization");
-
-  if (!userAgent || !userAgent.startsWith("CloveShortcuts/")) {
-    throw new HttpError(403, "Invalid User-Agent. Expected 'CloveShortcuts/<version>'");
-  }
-  if (!authorization) {
-    throw new HttpError(401, "Missing Authorization header", { "WWW-Authenticate": "Bearer" });
-  }
-
-  const [scheme, token = ""] = authorization.split(" ");
-  if (authorization.split(" ").length !== 2 || scheme?.toLowerCase() !== "bearer") {
-    throw new HttpError(401, "Invalid Authorization header format. Expected 'Bearer <token>'", {
-      "WWW-Authenticate": "Bearer",
-    });
-  }
-
-  if (!verifyBotToken(token)) {
-    throw new HttpError(401, "Invalid bot access token", { "WWW-Authenticate": "Bearer" });
-  }
   await next();
 }

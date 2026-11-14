@@ -85,7 +85,6 @@ export function isLocalhostOrigin(origin: string): boolean {
 
 export function corsOrigins(): string[] {
   const defaults = [
-    "https://doughmination.uk",
     "https://doughmination.co.uk",
     "https://doughmination.gay",
     "https://vibecoded.doughmination.gay",

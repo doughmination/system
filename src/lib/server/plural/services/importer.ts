@@ -9,18 +9,6 @@ import { HttpError } from "../errors";
 import { frontendUrl } from "../config";
 import type { JsonObject } from "../types";
 
-// Legacy DO keys that belong to the plural system. Guestbook, devices and counters stay in the api Worker
-const LEGACY_KEYS = new Set([
-  "users",
-  "member_tags",
-  "member_status",
-  "member_pride",
-  "member_relationships",
-  "mental_state",
-  "sso_sessions_index",
-]);
-const LEGACY_PREFIXES = ["sso_session:"];
-
 const MEDIA_FIELDS = ["avatar_url", "webhook_avatar_url", "banner"] as const;
 const MAX_MEDIA_BYTES = 10 * 1024 * 1024;
 
@@ -192,29 +180,4 @@ export async function importPluralKitExport(
   // shortcut: batches commit one slice at a time, so a failure part-way leaves a partial import. Re-run with replace=true
   await runBatches(statements);
   return report;
-}
-
-// Pull the plural keys out of the api Worker's old SystemState store
-export async function importLegacyStore(): Promise<{ imported: string[]; skipped: string[] }> {
-  const dump = await rt().env.HUB.exportLegacy();
-  const imported: string[] = [];
-  const skipped: string[] = [];
-  const statements: D1PreparedStatement[] = [];
-
-  for (const [key, value] of Object.entries(dump)) {
-    const wanted = LEGACY_KEYS.has(key) || LEGACY_PREFIXES.some((prefix) => key.startsWith(prefix));
-    if (!wanted) {
-      skipped.push(key);
-      continue;
-    }
-    statements.push(
-      rt()
-        .db.prepare("INSERT INTO kv (key, value) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value")
-        .bind(key, JSON.stringify(value)),
-    );
-    imported.push(key);
-  }
-
-  await runBatches(statements);
-  return { imported, skipped };
 }

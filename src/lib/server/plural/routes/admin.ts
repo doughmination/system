@@ -10,7 +10,7 @@ import { router, ok, jsonBody, signedIn } from "../openapi";
 import { MessageSchema } from "../schemas";
 import { requireAuth, requireAdmin, requireOwner } from "../middleware/auth";
 import { broadcastFrontendUpdate } from "../ws";
-import { importLegacyStore, importPluralKitExport } from "../services/importer";
+import { importPluralKitExport } from "../services/importer";
 import { rt } from "../runtime";
 
 export const adminRoutes = router();
@@ -67,24 +67,6 @@ adminRoutes.openapi(
     });
     return c.json(report, 200);
   },
-);
-
-adminRoutes.openapi(
-  createRoute({
-    method: "post",
-    path: "/admin/import/legacy",
-    tags: ["Admin"],
-    summary: "Copy users, tags, status, pride, relationships, mental state and sessions from the old api Worker (owner)",
-    security: signedIn,
-    middleware: [requireAuth, requireOwner] as const,
-    responses: ok(
-      z.object({
-        imported: z.array(z.string()),
-        skipped: z.array(z.string()),
-      }),
-    ),
-  }),
-  async (c) => c.json(await importLegacyStore(), 200),
 );
 
 // Images copied in by the importer. Public, like the PluralKit CDN was

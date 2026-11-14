@@ -54,7 +54,6 @@ export function jsonBody<T extends z.ZodType>(schema: T) {
 }
 
 export const signedIn = [{ bearerAuth: [] }];
-export const botAuth = [{ botAuth: [] }];
 
 function issuesText(issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>): string {
   return issues

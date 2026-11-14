@@ -17,7 +17,7 @@ export default defineConfig({
       },
       adapter: adapter(),
       // /api is bearer-token only (no cookies) and the site has no form actions, so the origin check guards nothing
-      // and would block body-less calls from the app, CloveShortcuts and the doughmination.uk proxy
+      // and would block body-less calls from the app and other sites
       csrf: {
         trustedOrigins: ["*"],
       },
