@@ -5,6 +5,7 @@
  */
 
 import { DoughminationClient } from "doughmination-api/server";
+import { siteUrl } from "./index.ts";
 
 const TOKEN_KEY = "token";
 
@@ -27,13 +28,25 @@ export function writeToken(token: string | null) {
   }
 }
 
+// The API lives on this site, at /api
+export function apiBase(origin: string): string {
+  return `${origin}/api`;
+}
+
+// Live updates come from the shared hub on the api Worker
+export const socketUrl = "wss://doughmination.uk/v2/ws";
+
 /** A client for load functions: SvelteKit's fetch, no token */
-export function publicClient(fetcher: typeof fetch): DoughminationClient {
-  return new DoughminationClient({ fetch: fetcher });
+export function publicClient(fetcher: typeof fetch, origin: string): DoughminationClient {
+  return new DoughminationClient({
+    fetch: fetcher,
+    baseUrl: apiBase(origin),
+  });
 }
 
 /** The browser's client: every request carries the current token */
 export const client = new DoughminationClient({
+  baseUrl: apiBase(typeof location === "undefined" ? siteUrl : location.origin),
   token: () => readToken(),
 });
 

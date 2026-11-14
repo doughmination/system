@@ -1,0 +1,40 @@
+/* src/lib/server/plural/types.ts
+ * Copyright (c) 2026 Clove Nytrix Doughmination Twilight
+ * Licensed under the DASL-1.2 Licence.
+ * See LICENCE.md in the project root for full licence information.
+ */
+
+// The api Worker's `Hub` entrypoint, reached over the HUB service binding
+export interface HubRpc {
+  broadcast(data: unknown): Promise<void>;
+  // Every key in the old SystemState DO store, for the one-time import
+  exportLegacy(): Promise<Record<string, unknown>>;
+}
+
+export interface PluralEnv {
+  DB: D1Database;
+  MEDIA: R2Bucket;
+  HUB: Fetcher & HubRpc;
+
+  // Secrets
+  JWT_SECRET?: string;
+  SSO_CLIENT_ID?: string;
+  SSO_CLIENT_SECRET?: string;
+  DOUGH_BOT_TOKEN?: string;
+
+  // Vars
+  SSO_ISSUER?: string;
+  SSO_REDIRECT_URI?: string;
+  SSO_SCOPES?: string;
+  SSO_POST_LOGIN_URL?: string;
+  SSO_POST_LOGOUT_REDIRECT_URI?: string;
+  ADMIN_USERNAME?: string;
+  ADMIN_DISPLAY_NAME?: string;
+  ADMIN_EMAIL?: string;
+  FRONTEND_URL?: string;
+  CORS_ORIGINS?: string;
+}
+
+// Member, system and switch objects travel as loose JSON, as they did from PluralKit
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type JsonObject = Record<string, any>;

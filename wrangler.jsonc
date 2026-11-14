@@ -1,16 +1,57 @@
+// wrangler.jsonc
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "doughmination-system",
   "main": ".svelte-kit/cloudflare/_worker.js",
+  "account_id": "f87ee4b9600f437b8da1104d077418c3",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": [
     "nodejs_compat",
-    // Makes fetch() in server code go over the public internet — needed so
-    // member pages can call the Doughmination/PluralKit API while rendering.
+    // fetch() in server code goes over the public internet (SSO, media import)
     "global_fetch_strictly_public"
   ],
   "assets": {
     "binding": "ASSETS",
     "directory": ".svelte-kit/cloudflare"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "doughmination-system",
+      "database_id": "447ff8ba-f1c1-4447-82b2-71dac05fae8b",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "doughmination-system-media"
+    }
+  ],
+  // The api Worker's realtime hub (/v2/ws). RPC only, never public
+  "services": [
+    {
+      "binding": "HUB",
+      "service": "api",
+      "entrypoint": "Hub"
+    }
+  ],
+  "vars": {
+    "ADMIN_USERNAME": "clove",
+    "ADMIN_DISPLAY_NAME": "Administrator",
+    "ADMIN_EMAIL": "admin@doughmination.win",
+    "FRONTEND_URL": "https://doughmination.co.uk",
+    "CORS_ORIGINS": "",
+
+    // Doughmination SSO. Secrets: SSO_CLIENT_ID, SSO_CLIENT_SECRET, JWT_SECRET
+    // The redirect stays on doughmination.uk, which forwards /v2/plural/* here
+    "SSO_ISSUER": "https://auth.doughmination.gay",
+    "SSO_REDIRECT_URI": "https://doughmination.uk/v2/plural/auth/sso/callback",
+    "SSO_SCOPES": "openid profile email offline_access",
+    "SSO_POST_LOGIN_URL": "https://doughmination.co.uk/user/login/callback",
+    "SSO_POST_LOGOUT_REDIRECT_URI": "https://doughmination.co.uk/"
   }
 }

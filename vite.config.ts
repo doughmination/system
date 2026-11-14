@@ -16,6 +16,11 @@ export default defineConfig({
         runes: ({ filename }) => (filename.split(/[/\\]/).includes("node_modules") ? undefined : true),
       },
       adapter: adapter(),
+      // /api is bearer-token only (no cookies) and the site has no form actions, so the origin check guards nothing
+      // and would block body-less calls from the app, CloveShortcuts and the doughmination.uk proxy
+      csrf: {
+        trustedOrigins: ["*"],
+      },
     }),
   ],
   // iconsax fetches its icon data relative to its own file, which pre-bundling breaks

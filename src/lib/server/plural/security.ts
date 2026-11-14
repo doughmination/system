@@ -1,0 +1,137 @@
+/* src/lib/server/plural/security.ts
+ * Copyright (c) 2026 Clove Nytrix Doughmination Twilight
+ * Licensed under the DASL-1.2 Licence.
+ * See LICENCE.md in the project root for full licence information.
+ */
+
+/**
+ * Security utilities, rewritten for the Workers runtime (Web Crypto only —
+ * no `bcrypt`, `jsonwebtoken`, or `axios`).
+ *
+ *  - JWT: HS256 signed/verified with SubtleCrypto HMAC. This is the token the
+ *    API issues to the browser AFTER a successful SSO (OIDC) login, so every
+ *    existing bearer-auth route keeps working unchanged. It carries the id of
+ *    the SSO-backed session it belongs to (see services/sso_sessions.ts).
+ *  - OIDC helpers: cryptographically random state/PKCE-verifier generation and
+ *    the S256 code-challenge digest.
+ *
+ * Local password hashing has been removed — login is SSO-only.
+ */
+
+import { ACCESS_TOKEN_EXPIRE_MINUTES, jwtSecret } from "./config";
+import { HttpError } from "./errors";
+
+const enc = new TextEncoder();
+const dec = new TextDecoder();
+
+// ---------------------------------------------------------------------------
+// base64url helpers
+// ---------------------------------------------------------------------------
+
+function bytesToB64url(bytes: Uint8Array): string {
+  let bin = "";
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function b64urlToBytes(s: string): Uint8Array<ArrayBuffer> {
+  const b64 = s.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(s.length / 4) * 4, "=");
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+function b64urlJson(obj: unknown): string {
+  return bytesToB64url(enc.encode(JSON.stringify(obj)));
+}
+
+/** Constant-time byte comparison. */
+function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i]! ^ b[i]!;
+  return diff === 0;
+}
+
+/** Constant-time string comparison, tolerant of differing lengths. */
+export function constantTimeStringEqual(a: string, b: string): boolean {
+  return timingSafeEqual(enc.encode(a), enc.encode(b));
+}
+
+// ---------------------------------------------------------------------------
+// OIDC / PKCE helpers
+// ---------------------------------------------------------------------------
+
+/** A URL-safe, cryptographically random token — used for OIDC `state` and the
+ *  PKCE code verifier. `bytes` is the amount of entropy, not the string length. */
+export function randomUrlToken(bytes = 32): string {
+  return bytesToB64url(crypto.getRandomValues(new Uint8Array(bytes)));
+}
+
+/** The PKCE S256 code challenge: base64url( SHA-256( verifier ) ). */
+export async function sha256Base64Url(input: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", enc.encode(input));
+  return bytesToB64url(new Uint8Array(digest));
+}
+
+// ---------------------------------------------------------------------------
+// JWT (HS256)
+// ---------------------------------------------------------------------------
+
+async function hmacKey(): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
+    "raw",
+    enc.encode(jwtSecret()),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign", "verify"],
+  );
+}
+
+export async function createAccessToken(data: Record<string, unknown>): Promise<string> {
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    ...data,
+    iat: now,
+    exp: now + ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+  };
+  const header = { alg: "HS256", typ: "JWT" };
+  const signingInput = `${b64urlJson(header)}.${b64urlJson(payload)}`;
+  const key = await hmacKey();
+  const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, enc.encode(signingInput)));
+  return `${signingInput}.${bytesToB64url(sig)}`;
+}
+
+export interface JwtPayload {
+  sub?: string;
+  [k: string]: unknown;
+}
+
+/** `allowExpired` is only for logout, where a stale token should still end its session. */
+export async function decodeAccessToken(
+  token: string,
+  opts: { allowExpired?: boolean } = {},
+): Promise<JwtPayload> {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) throw new Error("malformed");
+    const [h, p, s] = parts as [string, string, string];
+    const key = await hmacKey();
+    const valid = await crypto.subtle.verify(
+      "HMAC",
+      key,
+      b64urlToBytes(s),
+      enc.encode(`${h}.${p}`),
+    );
+    if (!valid) throw new Error("bad signature");
+
+    const payload = JSON.parse(dec.decode(b64urlToBytes(p))) as JwtPayload & { exp?: number };
+    if (!opts.allowExpired && typeof payload.exp === "number" && payload.exp < Math.floor(Date.now() / 1000)) {
+      throw new Error("expired");
+    }
+    return payload;
+  } catch {
+    throw new HttpError(401, "Invalid or expired token", { "WWW-Authenticate": "Bearer" });
+  }
+}

@@ -16,9 +16,12 @@
     "#lib/*": "./src/lib/*"
   },
   "dependencies": {
+    "@hono/zod-openapi": "^1.6.3",
     "doughmination-api": "^1.6.0",
+    "hono": "^4.13.18",
     "iconsax": "^0.1.1",
-    "simple-icons": "npm:@icons-pack/svelte-simple-icons@^7.2.0"
+    "simple-icons": "npm:@icons-pack/svelte-simple-icons@^7.2.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261029.1",

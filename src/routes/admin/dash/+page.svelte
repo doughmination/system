@@ -13,6 +13,12 @@
 
   const PAGES = [
     {
+      href: "/admin/members",
+      label: "Member manager",
+      icon: "profile-2user",
+      desc: "Create and edit members, import data",
+    },
+    {
       href: "/admin/switch",
       label: "Switch manager",
       icon: "refresh-circle",
@@ -115,10 +121,10 @@
           <p>{page.desc}</p>
         </a>
       {/each}
-      <a class="tile" href="https://doughmination.uk/docs" target="_blank" rel="noopener noreferrer">
+      <a class="tile" href="/api/openapi.json" target="_blank" rel="noopener noreferrer">
         <span class="tile-icon"><iconsax-icon name="driver" type="bulk" size="22"></iconsax-icon></span>
         <h3>API endpoints</h3>
-        <p>View API reference</p>
+        <p>OpenAPI spec for this site</p>
       </a>
     </div>
   </div>

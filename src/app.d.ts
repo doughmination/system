@@ -4,6 +4,8 @@
  * See LICENCE.md in the project root for full licence information.
  */
 
+import type { PluralEnv } from "#lib/server/plural/types.ts";
+
 declare global {
   namespace App {
     interface Error {
@@ -17,8 +19,8 @@ declare global {
     }
   }
 
-  // Bindings; none yet beyond the static assets
-  interface Env {
+  // Static assets plus the plural API's bindings, vars and secrets
+  interface Env extends PluralEnv {
     ASSETS: Fetcher;
   }
 }

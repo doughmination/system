@@ -8,9 +8,9 @@ import type { PageLoad } from "./$types";
 import { publicClient } from "#lib/api.ts";
 
 // Rendered on the server for search engines and link previews, then kept live by the socket
-export const load: PageLoad = async ({ fetch, depends }) => {
+export const load: PageLoad = async ({ fetch, depends, url }) => {
   depends("api:public");
-  const api = publicClient(fetch);
+  const api = publicClient(fetch, url.origin);
 
   const [members, fronters, system] = await Promise.all([
     api.getMembers().catch(() => []),

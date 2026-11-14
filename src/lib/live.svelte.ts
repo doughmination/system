@@ -5,7 +5,7 @@
  */
 
 import { invalidate } from "$app/navigation";
-import { client } from "./api.ts";
+import { socketUrl } from "./api.ts";
 
 // The API's socket: fronters and mental state changes, and admin "reload everyone"
 const PING_MS = 30_000;
@@ -23,7 +23,7 @@ class Live {
   connect() {
     if (this.socket || typeof WebSocket === "undefined") return;
 
-    const socket = new WebSocket(client.socketUrl);
+    const socket = new WebSocket(socketUrl);
     this.socket = socket;
     this.status = this.attempts > 0 ? "reconnecting" : "connecting";
 

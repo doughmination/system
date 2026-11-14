@@ -1,0 +1,340 @@
+<!-- src/routes/admin/members/+page.svelte
+     Copyright (c) 2026 Clove Nytrix Doughmination Twilight
+     Licensed under the DASL-1.2 Licence.
+     See LICENCE.md in the project root for full licence information.
+-->
+
+<script lang="ts">
+  import { onMount } from "svelte";
+  import type { PluralMember, PluralProxyTag } from "doughmination-api/server";
+  import { avatarFallback, errorText, fallbackAvatar, memberName, sortMembers, type Message as MessageType } from "#lib";
+  import { authFetch, client } from "#lib/api.ts";
+  import { auth } from "#lib/auth.svelte.ts";
+  import Protected from "#lib/components/Protected.svelte";
+  import PageHead from "#lib/components/PageHead.svelte";
+  import Message from "#lib/components/Message.svelte";
+
+  // Text fields, in form order. Empty input is saved as null
+  const FIELDS = [
+    {
+      key: "name",
+      label: "Name",
+      placeholder: "Used in links and switching",
+    },
+    {
+      key: "display_name",
+      label: "Display name",
+      placeholder: "Shown on the site",
+    },
+    {
+      key: "pronouns",
+      label: "Pronouns",
+      placeholder: "fae/faer",
+    },
+    {
+      key: "color",
+      label: "Colour",
+      placeholder: "ff99cc (no #)",
+    },
+    {
+      key: "birthday",
+      label: "Birthday",
+      placeholder: "YYYY-MM-DD, year 0004 hides it",
+    },
+    {
+      key: "avatar_url",
+      label: "Avatar URL",
+      placeholder: "https://…",
+    },
+    {
+      key: "banner",
+      label: "Banner URL",
+      placeholder: "https://…",
+    },
+  ] as const;
+
+  type FieldKey = (typeof FIELDS)[number]["key"];
+
+  let members = $state<PluralMember[]>([]);
+  let chosenId = $state<string | null>(null);
+  let form = $state<Record<FieldKey | "description" | "proxy_tags", string>>(emptyForm());
+  let loading = $state(true);
+  let saving = $state(false);
+  let message = $state<MessageType>(null);
+
+  let importFile = $state<FileList | null>(null);
+  let replaceExisting = $state(false);
+
+  const chosen = $derived(members.find((member) => member.id === chosenId) ?? null);
+
+  function emptyForm() {
+    return {
+      name: "",
+      display_name: "",
+      pronouns: "",
+      color: "",
+      birthday: "",
+      avatar_url: "",
+      banner: "",
+      description: "",
+      proxy_tags: "",
+    };
+  }
+
+  // One tag per line, written like PluralKit: "c:text" or "[text]"
+  function tagsToText(tags: PluralProxyTag[] | undefined): string {
+    return (tags ?? []).map((tag) => `${tag.prefix ?? ""}text${tag.suffix ?? ""}`).join("\n");
+  }
+
+  function textToTags(text: string): PluralProxyTag[] {
+    return text
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.includes("text"))
+      .map((line) => {
+        const at = line.indexOf("text");
+        return {
+          prefix: line.slice(0, at) || null,
+          suffix: line.slice(at + 4) || null,
+        };
+      });
+  }
+
+  function pick(member: PluralMember | null) {
+    chosenId = member?.id ?? null;
+    message = null;
+    if (!member) {
+      form = emptyForm();
+      return;
+    }
+    form = {
+      name: member.original_name ?? member.name ?? "",
+      display_name: member.is_special ? "" : (member.display_name ?? ""),
+      pronouns: member.pronouns ?? "",
+      color: member.color ?? "",
+      birthday: member.birthday ?? "",
+      avatar_url: member.avatar_url ?? "",
+      banner: member.banner ?? "",
+      description: member.description ?? "",
+      proxy_tags: tagsToText(member.proxy_tags),
+    };
+  }
+
+  function body() {
+    const result: Record<string, unknown> = {
+      description: form.description.trim() || null,
+      proxy_tags: textToTags(form.proxy_tags),
+    };
+    for (const field of FIELDS) result[field.key] = form[field.key].trim() || null;
+    return result;
+  }
+
+  async function reload() {
+    members = sortMembers(await client.getMembers());
+  }
+
+  onMount(() => {
+    void reload()
+      .catch((err) => {
+        message = {
+          type: "error",
+          content: errorText(err, "Failed to load members"),
+        };
+      })
+      .finally(() => (loading = false));
+  });
+
+  async function run(action: () => Promise<string>, fallback: string) {
+    saving = true;
+    message = null;
+    try {
+      message = {
+        type: "success",
+        content: await action(),
+      };
+    } catch (err) {
+      message = {
+        type: "error",
+        content: errorText(err, fallback),
+      };
+    } finally {
+      saving = false;
+    }
+  }
+
+  function save(event: SubmitEvent) {
+    event.preventDefault();
+    if (!form.name.trim()) return;
+
+    void run(async () => {
+      const path = chosenId ? `/plural/members/${encodeURIComponent(chosenId)}` : "/plural/members";
+      const saved = await authFetch<PluralMember>(path, {
+        method: chosenId ? "PATCH" : "POST",
+        body: JSON.stringify(body()),
+      }, "Failed to save member");
+      await reload();
+      pick(members.find((member) => member.id === saved.id) ?? null);
+      return chosenId ? "Member saved!" : "Member created!";
+    }, "Failed to save member");
+  }
+
+  function remove() {
+    if (!chosen || !confirm(`Delete ${memberName(chosen)}? Their past switches stay in the history.`)) return;
+
+    void run(async () => {
+      await authFetch(`/plural/members/${encodeURIComponent(chosen.id)}`, { method: "DELETE" }, "Failed to delete member");
+      pick(null);
+      await reload();
+      return "Member deleted";
+    }, "Failed to delete member");
+  }
+
+  function importExport(event: SubmitEvent) {
+    event.preventDefault();
+    const file = importFile?.[0];
+    if (!file) return;
+
+    void run(async () => {
+      const query = `replace=${replaceExisting}`;
+      const report = await authFetch<{
+        members: number;
+        switches: number;
+        media_copied: number;
+        media_failed: string[];
+      }>(`/plural/admin/import/pluralkit?${query}`, {
+        method: "POST",
+        body: await file.text(),
+      }, "Import failed");
+      await reload();
+      const failed = report.media_failed.length ? `, ${report.media_failed.length} image(s) kept their old URL` : "";
+      return `Imported ${report.members} members and ${report.switches} switches, copied ${report.media_copied} image(s)${failed}`;
+    }, "Import failed");
+  }
+
+  function importLegacy() {
+    if (!confirm("Copy users, tags, statuses, pride, relationships, mental state and sessions from the old API? Existing values here are overwritten.")) return;
+
+    void run(async () => {
+      const report = await authFetch<{ imported: string[] }>("/plural/admin/import/legacy", { method: "POST" }, "Legacy import failed");
+      await auth.refresh();
+      return `Copied ${report.imported.length} item(s) from the old API`;
+    }, "Legacy import failed");
+  }
+</script>
+
+<svelte:head>
+  <title>Member manager · Doughmination System</title>
+</svelte:head>
+
+<Protected admin>
+  <div class="page">
+    <PageHead
+      eyebrow="Admin"
+      title="Member manager"
+      subtitle="Create, edit and remove members"
+      back={{
+        href: "/admin/dash",
+        label: "Back to dashboard",
+      }}
+    />
+
+    <Message {message} />
+
+    {#if loading}
+      <p class="muted">Loading…</p>
+    {:else}
+      <div class="two-col">
+        <form class="panel stack" onsubmit={save}>
+          <h2>{chosen ? `Editing ${memberName(chosen)}` : "New member"}</h2>
+
+          {#each FIELDS as field (field.key)}
+            <label class="field">
+              <span>{field.label}</span>
+              <input type="text" bind:value={form[field.key]} placeholder={field.placeholder} required={field.key === "name"} />
+            </label>
+          {/each}
+
+          <label class="field">
+            <span>Description</span>
+            <textarea bind:value={form.description} maxlength="1000" rows="4"></textarea>
+          </label>
+
+          <label class="field">
+            <span>Proxy tags</span>
+            <textarea bind:value={form.proxy_tags} rows="2" placeholder={"c:text\n[text]"}></textarea>
+            <small class="muted">One per line. "text" marks where the message goes</small>
+          </label>
+
+          <div class="buttons">
+            <button type="submit" class="primary" disabled={saving || !form.name.trim()}>
+              {saving ? "Saving..." : chosen ? "Save member" : "Create member"}
+            </button>
+            {#if chosen}
+              <button type="button" disabled={saving} onclick={() => pick(null)}>New member</button>
+              {#if auth.isOwner}
+                <button type="button" class="danger" disabled={saving} onclick={remove}>Delete</button>
+              {/if}
+            {/if}
+          </div>
+        </form>
+
+        <section class="panel">
+          <h2>Members</h2>
+          <p class="muted small">{members.length} member(s)</p>
+          <div class="pick-list">
+            {#each members as member (member.id)}
+              <button type="button" class="pick" class:selected={member.id === chosenId} onclick={() => pick(member)}>
+                <img class="member-avatar avatar-sm" src={member.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />
+                <span class="grow">
+                  <p>{memberName(member)}</p>
+                  <p class="muted small">{member.id}{member.pronouns ? ` · ${member.pronouns}` : ""}</p>
+                </span>
+              </button>
+            {:else}
+              <p class="muted">No members yet. Import a PluralKit export below.</p>
+            {/each}
+          </div>
+        </section>
+      </div>
+
+      {#if auth.isOwner}
+        <section class="panel stack import">
+          <h2>Import</h2>
+
+          <form class="stack" onsubmit={importExport}>
+            <label class="field">
+              <span>PluralKit export file (from pk;export)</span>
+              <input type="file" accept="application/json,.json" bind:files={importFile} />
+            </label>
+            <label class="check">
+              <input type="checkbox" bind:checked={replaceExisting} />
+              Replace the system already here, with its members and switch history
+            </label>
+            <div class="buttons">
+              <button type="submit" class="primary" disabled={saving || !importFile?.length}>Import export</button>
+            </div>
+          </form>
+
+          <div class="buttons">
+            <button type="button" disabled={saving} onclick={importLegacy}>Copy data from the old API</button>
+          </div>
+        </section>
+      {/if}
+    {/if}
+  </div>
+</Protected>
+
+<style>
+  h2,
+  p {
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+  }
+
+  .import {
+    margin-top: 1.25rem;
+  }
+</style>

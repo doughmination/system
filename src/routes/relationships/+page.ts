@@ -7,9 +7,9 @@
 import type { PageLoad } from "./$types";
 import { publicClient } from "#lib/api.ts";
 
-export const load: PageLoad = async ({ fetch, depends }) => {
+export const load: PageLoad = async ({ fetch, depends, url }) => {
   depends("api:public");
-  const api = publicClient(fetch);
+  const api = publicClient(fetch, url.origin);
 
   const [members, relationships] = await Promise.all([
     api.getMembers().catch(() => []),

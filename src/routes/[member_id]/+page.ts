@@ -10,9 +10,9 @@ import type { PageLoad } from "./$types";
 import { publicClient } from "#lib/api.ts";
 
 // Server-rendered so Discord embeds and live data stay current with no rebuild
-export const load: PageLoad = async ({ fetch, params, depends }) => {
+export const load: PageLoad = async ({ fetch, params, depends, url }) => {
   depends("api:public");
-  const api = publicClient(fetch);
+  const api = publicClient(fetch, url.origin);
   const id = params.member_id;
 
   const [member, status, members, relationships] = await Promise.all([
