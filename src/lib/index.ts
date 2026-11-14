@@ -10,7 +10,7 @@ export const siteName = "Doughmination System";
 
 export const siteUrl = "https://doughmination.co.uk";
 
-export const fallbackAvatar = "https://raw.doughmination.gay/favicons/favicon.png";
+export const fallbackAvatar = "/favicon.png";
 
 export const mainSite = "https://doughmination.gay";
 
