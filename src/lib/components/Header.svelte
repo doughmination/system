@@ -31,9 +31,6 @@
       <span class="who">Signed in as <strong>{auth.displayName}</strong></span>
     {/if}
     {#if auth.signedIn}
-      <a href="/user/metrics">
-        <iconsax-icon name="chart-2" type="bulk" size="24" class="nav-icon"></iconsax-icon>Metrics
-      </a>
       {#if auth.isOwner}
         <a href="/owner/dash">
           <iconsax-icon name="crown" type="bulk" size="24" class="nav-icon"></iconsax-icon>Owner
@@ -44,6 +41,9 @@
           <iconsax-icon name="setting-2" type="bulk" size="24" class="nav-icon"></iconsax-icon>Admin
         </a>
       {/if}
+      <a href="/user/dash">
+        <iconsax-icon name="global" type="bulk" size="24" class="nav-icon"></iconsax-icon>Public
+      </a>
       <a href="/user/profile">
         <iconsax-icon name="user" type="bulk" size="24" class="nav-icon"></iconsax-icon>Profile
       </a>

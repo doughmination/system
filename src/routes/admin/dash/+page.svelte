@@ -129,11 +129,6 @@
           <p>{page.desc}</p>
         </a>
       {/each}
-      <a class="tile" href="/user/docs">
-        <span class="tile-icon"><iconsax-icon name="driver" type="bulk" size="22"></iconsax-icon></span>
-        <h3>API endpoints</h3>
-        <p>OpenAPI spec for this site</p>
-      </a>
     </div>
   </div>
 </Protected>
