@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcFavorite from "~icons/ic/outline-favorite";
   import { onMount } from "svelte";
   import type { PluralMember, Relationship } from "doughmination-api/server";
   import { errorText, memberName, sortMembers, type Message as MessageType } from "#lib";
@@ -127,7 +128,7 @@
         label: "Back to dashboard",
       }}
     />
-    <div><a class="btn" href="/relationships"><iconsax-icon name="lovely" type="bulk" size="16"></iconsax-icon>View map</a></div>
+    <div><a class="btn" href="/relationships"><IcFavorite width="16" height="16" />View map</a></div>
 
     <Message {message} />
 

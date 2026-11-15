@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcPerson from "~icons/ic/outline-person";
   import { errorText, type Message as MessageType } from "#lib";
   import { authFetch } from "#lib/api.ts";
   import { auth } from "#lib/auth.svelte.ts";
@@ -108,7 +109,7 @@
             {#if avatarUrl && previewable && !broken}
               <img class="member-avatar preview" src={avatarUrl.trim()} alt="Avatar preview" onerror={() => (broken = true)} onload={() => (broken = false)} />
             {:else}
-              <span class="preview placeholder"><iconsax-icon name="user" type="bulk" size="28"></iconsax-icon></span>
+              <span class="preview placeholder"><IcPerson width="28" height="28" /></span>
             {/if}
             <input
               id="avatarUrl"

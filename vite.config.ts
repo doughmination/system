@@ -7,6 +7,7 @@
 import adapter from "@sveltejs/adapter-cloudflare";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
+import Icons from "unplugin-icons/vite";
 
 export default defineConfig({
   plugins: [
@@ -22,9 +23,10 @@ export default defineConfig({
         trustedOrigins: ["*"],
       },
     }),
+    // Turns each `~icons/<set>/<name>` import into an inline-SVG Svelte component at build time
+    Icons({
+      compiler: "svelte",
+      scale: 1,
+    }),
   ],
-  // iconsax fetches its icon data relative to its own file, which pre-bundling breaks
-  optimizeDeps: {
-    exclude: ["iconsax"],
-  },
 });

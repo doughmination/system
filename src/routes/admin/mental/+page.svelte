@@ -5,6 +5,11 @@
 -->
 
 <script lang="ts">
+  import IcCheckCircle from "~icons/ic/outline-check-circle";
+  import IcGppBad from "~icons/ic/outline-gpp-bad";
+  import IcInfo from "~icons/ic/outline-info";
+  import IcReportProblem from "~icons/ic/outline-report-problem";
+  import IcWarningAmber from "~icons/ic/outline-warning-amber";
   import { onMount } from "svelte";
   import type { MentalState } from "doughmination-api/server";
   import { errorText, type Message as MessageType } from "#lib";
@@ -17,27 +22,27 @@
     {
       value: "safe",
       label: "Safe",
-      icon: "tick-circle",
+      icon: IcCheckCircle,
     },
     {
       value: "unstable",
       label: "Unstable",
-      icon: "danger",
+      icon: IcReportProblem,
     },
     {
       value: "idealizing",
       label: "Idealizing",
-      icon: "info-circle",
+      icon: IcInfo,
     },
     {
       value: "self-harming",
       label: "Self-Harming",
-      icon: "warning-2",
+      icon: IcWarningAmber,
     },
     {
       value: "highly at risk",
       label: "Highly At Risk",
-      icon: "shield-cross",
+      icon: IcGppBad,
     },
   ];
 
@@ -109,7 +114,7 @@
     {:else}
       {#if current && currentOption}
         <div class="mental mental-{current.level.replaceAll(' ', '-')}">
-          <iconsax-icon name={currentOption.icon} type="bulk" size="32"></iconsax-icon>
+          <currentOption.icon width="32" height="32" />
           <div>
             <p class="mental-label">{currentOption.label}</p>
             {#if current.notes}<p>{current.notes}</p>{/if}

@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcPersonAdd from "~icons/ic/outline-person-add";
   import { onMount } from "svelte";
   import { avatarFallback, errorText, fallbackAvatar, type Message as MessageType } from "#lib";
   import { authFetch } from "#lib/api.ts";
@@ -238,7 +239,7 @@
         </form>
       {:else}
         <div><button type="button" class="primary" onclick={() => (creating = true)}>
-          <iconsax-icon name="user-add" type="bulk" size="16"></iconsax-icon>Create new user
+          <IcPersonAdd width="16" height="16" />Create new user
         </button></div>
       {/if}
 

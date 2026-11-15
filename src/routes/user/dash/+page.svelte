@@ -5,6 +5,8 @@
 -->
 
 <script lang="ts">
+  import IcApi from "~icons/ic/outline-api";
+  import IcBarChart from "~icons/ic/outline-bar-chart";
   import Protected from "#lib/components/Protected.svelte";
   import PageHead from "#lib/components/PageHead.svelte";
 </script>
@@ -27,12 +29,12 @@
 
     <div class="tiles">
       <a class="tile" href="/user/docs">
-        <span class="tile-icon"><iconsax-icon name="driver" type="bulk" size="22"></iconsax-icon></span>
+        <span class="tile-icon"><IcApi width="22" height="22" /></span>
         <h3>API docs</h3>
         <p>Every endpoint on this site</p>
       </a>
       <a class="tile" href="/user/metrics">
-        <span class="tile-icon"><iconsax-icon name="chart-2" type="bulk" size="22"></iconsax-icon></span>
+        <span class="tile-icon"><IcBarChart width="22" height="22" /></span>
         <h3>Metrics</h3>
         <p>Fronting and switching statistics</p>
       </a>

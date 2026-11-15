@@ -4,6 +4,8 @@
  * See LICENCE.md in the project root for full licence information.
  */
 
+/// <reference types="unplugin-icons/types/svelte5" />
+
 import type { PluralEnv } from "#lib/server/plural/types.ts";
 
 declare global {
@@ -22,19 +24,6 @@ declare global {
   // Static assets plus the plural API's bindings, vars and secrets
   interface Env extends PluralEnv {
     ASSETS: Fetcher;
-  }
-}
-
-// <iconsax-icon> is registered by `import "iconsax"` in src/hooks.client.ts
-declare module "svelte/elements" {
-  export interface SvelteHTMLElements {
-    "iconsax-icon": HTMLAttributes<HTMLElement> & {
-      name: string;
-      type?: "bold" | "broken" | "bulk" | "linear" | "outline" | "twotone";
-      size?: number | string;
-      color?: string;
-      pro?: boolean;
-    };
   }
 }
 

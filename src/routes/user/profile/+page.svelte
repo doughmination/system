@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcPerson from "~icons/ic/outline-person";
   import { auth } from "#lib/auth.svelte.ts";
   import Protected from "#lib/components/Protected.svelte";
 
@@ -23,7 +24,7 @@
         {#if auth.user.avatar_url && !broken}
           <img class="member-avatar avatar" src={auth.user.avatar_url} alt="" onerror={() => (broken = true)} />
         {:else}
-          <span class="avatar placeholder"><iconsax-icon name="user" type="bulk" size="48"></iconsax-icon></span>
+          <span class="avatar placeholder"><IcPerson width="48" height="48" /></span>
         {/if}
         <h1>{auth.user.display_name || auth.user.username}</h1>
         <p class="chips">

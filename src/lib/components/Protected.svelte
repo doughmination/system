@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcArrowBack from "~icons/ic/outline-arrow-back";
   import type { Snippet } from "svelte";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
@@ -47,7 +48,7 @@
       <p class="muted">This area is restricted to {denied === "Owner" ? "system owners" : `${denied.toLowerCase()}s`} only.</p>
       <div>
         <button type="button" onclick={() => history.back()}>
-          <iconsax-icon name="arrow-left-01" type="bulk" size="16"></iconsax-icon>Go back
+          <IcArrowBack width="16" height="16" />Go back
         </button>
       </div>
     </section>

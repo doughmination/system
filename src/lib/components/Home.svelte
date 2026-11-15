@@ -5,6 +5,14 @@
 -->
 
 <script lang="ts">
+  import type { Component } from "svelte";
+  import IcCheckCircle from "~icons/ic/outline-check-circle";
+  import IcFilterList from "~icons/ic/outline-filter-list";
+  import IcGppBad from "~icons/ic/outline-gpp-bad";
+  import IcInfo from "~icons/ic/outline-info";
+  import IcReportProblem from "~icons/ic/outline-report-problem";
+  import IcSearch from "~icons/ic/outline-search";
+  import IcWarningAmber from "~icons/ic/outline-warning-amber";
   import type { FrontersResponse, PluralMember, PluralSystem } from "doughmination-api/server";
   import { replaceState } from "$app/navigation";
   import { page } from "$app/state";
@@ -32,12 +40,12 @@
     "highly at risk": "Highly At Risk",
   };
 
-  const MENTAL_ICONS: Record<string, string> = {
-    safe: "tick-circle",
-    unstable: "danger",
-    idealizing: "info-circle",
-    "self-harming": "warning-2",
-    "highly at risk": "shield-cross",
+  const MENTAL_ICONS: Record<string, Component> = {
+    safe: IcCheckCircle,
+    unstable: IcReportProblem,
+    idealizing: IcInfo,
+    "self-harming": IcWarningAmber,
+    "highly at risk": IcGppBad,
   };
 
   let search = $state("");
@@ -150,8 +158,9 @@
   </div>
 
   {#if mental}
+    {@const MentalIcon = MENTAL_ICONS[mental.level] ?? IcInfo}
     <div class="mental mental-{mental.level.replaceAll(' ', '-')}">
-      <iconsax-icon name={MENTAL_ICONS[mental.level] ?? "info-circle"} type="bulk" size="32"></iconsax-icon>
+      <MentalIcon width="32" height="32" />
       <div>
         <p><span class="muted">status:</span> <span class="mental-label">[ {MENTAL_LABELS[mental.level] ?? mental.level} ]</span></p>
         {#if mental.notes}
@@ -206,7 +215,7 @@
   <div class="controls">
     <div class="filters" bind:this={filtersBox}>
       <button type="button" class:primary={filtersOpen} aria-expanded={filtersOpen} onclick={() => (filtersOpen = !filtersOpen)}>
-        <iconsax-icon name="filter" type="bulk" size="16"></iconsax-icon>Filters
+        <IcFilterList width="16" height="16" />Filters
         {#if activeFilters > 0}<span class="badge accent">{activeFilters}</span>{/if}
       </button>
 
@@ -259,7 +268,7 @@
     {/if}
 
     <label class="search">
-      <iconsax-icon name="search-normal" type="bulk" size="18"></iconsax-icon>
+      <IcSearch width="18" height="18" />
       <input id="member-search" type="text" placeholder="Search members..." bind:value={search} />
       {#if search}
         <button type="button" class="chip-x" aria-label="Clear search" onclick={() => (search = "")}>✕</button>

@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcFavorite from "~icons/ic/outline-favorite";
   import "#lib/styles/footer.css";
   import { SiGithub } from "simple-icons";
   import { fallbackAvatar, mainSite } from "#lib";
@@ -19,7 +20,7 @@
 
     <span>
       part of <a href={mainSite}>doughmination.gay</a>
-      <iconsax-icon name="heart" type="bulk" size="16" class="beat"></iconsax-icon>
+      <IcFavorite width="16" height="16" class="beat" />
     </span>
 
     <span>

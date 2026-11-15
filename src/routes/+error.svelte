@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcArrowBack from "~icons/ic/outline-arrow-back";
   import { page } from "$app/state";
 
   const notFound = $derived(page.status === 404);
@@ -21,7 +22,7 @@
     <h1>{notFound ? "Page not found" : (page.error?.title ?? "Something went wrong")}</h1>
     <p class="muted">{notFound ? "There's nothing at that address." : page.error?.message}</p>
     <p>
-      <a class="btn" href="/"><iconsax-icon name="arrow-left-01" type="bulk" size="16"></iconsax-icon>Return to home</a>
+      <a class="btn" href="/"><IcArrowBack width="16" height="16" />Return to home</a>
     </p>
   </section>
 </div>

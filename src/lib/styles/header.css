@@ -82,8 +82,7 @@ header nav a:hover {
   outline: 1px solid var(--line);
 }
 
-.nav-icon,
-.nav-icon svg {
+.nav-icon {
   width: 1.2em;
   height: 1.2em;
   flex-shrink: 0;

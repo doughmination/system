@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcKey from "~icons/ic/outline-key";
   import { page } from "$app/state";
   import { client } from "#lib/api.ts";
 
@@ -37,7 +38,7 @@
     {/if}
     <div>
       <button type="button" class="primary" disabled={redirecting} onclick={signIn}>
-        <iconsax-icon name="key" type="bulk" size="18"></iconsax-icon>
+        <IcKey width="18" height="18" />
         {redirecting ? "Redirecting to SSO…" : "Sign in with SSO"}
       </button>
     </div>

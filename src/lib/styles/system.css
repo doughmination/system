@@ -124,7 +124,7 @@
   --state: var(--bad);
 }
 
-.mental iconsax-icon {
+.mental svg {
   color: var(--state);
 }
 

@@ -5,6 +5,12 @@
 -->
 
 <script lang="ts">
+  import IcLogin from "~icons/ic/outline-login";
+  import IcLogout from "~icons/ic/outline-logout";
+  import IcPerson from "~icons/ic/outline-person";
+  import IcPublic from "~icons/ic/outline-public";
+  import IcSettings from "~icons/ic/outline-settings";
+  import IcWorkspacePremium from "~icons/ic/outline-workspace-premium";
   import "#lib/styles/header.css";
   import { goto } from "$app/navigation";
   import { fallbackAvatar } from "#lib";
@@ -33,26 +39,26 @@
     {#if auth.signedIn}
       {#if auth.isOwner}
         <a href="/owner/dash">
-          <iconsax-icon name="crown" type="bulk" size="24" class="nav-icon"></iconsax-icon>Owner
+          <IcWorkspacePremium width="24" height="24" class="nav-icon" />Owner
         </a>
       {/if}
       {#if auth.isAdmin}
         <a href="/admin/dash">
-          <iconsax-icon name="setting-2" type="bulk" size="24" class="nav-icon"></iconsax-icon>Admin
+          <IcSettings width="24" height="24" class="nav-icon" />Admin
         </a>
       {/if}
       <a href="/user/dash">
-        <iconsax-icon name="global" type="bulk" size="24" class="nav-icon"></iconsax-icon>Public
+        <IcPublic width="24" height="24" class="nav-icon" />Public
       </a>
       <a href="/user/profile">
-        <iconsax-icon name="user" type="bulk" size="24" class="nav-icon"></iconsax-icon>Profile
+        <IcPerson width="24" height="24" class="nav-icon" />Profile
       </a>
       <button type="button" class="nav-button" onclick={signOut}>
-        <iconsax-icon name="logout-01" type="bulk" size="24" class="nav-icon"></iconsax-icon>Sign out
+        <IcLogout width="24" height="24" class="nav-icon" />Sign out
       </button>
     {:else if auth.ready}
       <a href="/user/login">
-        <iconsax-icon name="login-01" type="bulk" size="24" class="nav-icon"></iconsax-icon>Sign in
+        <IcLogin width="24" height="24" class="nav-icon" />Sign in
       </a>
     {/if}
   </nav>

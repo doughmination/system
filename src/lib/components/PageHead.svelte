@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcArrowBack from "~icons/ic/outline-arrow-back";
   let {
     eyebrow,
     title,
@@ -31,7 +32,7 @@
   </div>
   {#if back}
     <a class="btn" href={back.href}>
-      <iconsax-icon name="arrow-left-01" type="bulk" size="16"></iconsax-icon>{back.label}
+      <IcArrowBack width="16" height="16" />{back.label}
     </a>
   {/if}
 </div>

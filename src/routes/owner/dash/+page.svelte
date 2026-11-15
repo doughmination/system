@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+  import IcPeople from "~icons/ic/outline-people";
   import Protected from "#lib/components/Protected.svelte";
   import PageHead from "#lib/components/PageHead.svelte";
 </script>
@@ -27,7 +28,7 @@
 
     <div class="tiles">
       <a class="tile" href="/owner/users">
-        <span class="tile-icon"><iconsax-icon name="people" type="bulk" size="22"></iconsax-icon></span>
+        <span class="tile-icon"><IcPeople width="22" height="22" /></span>
         <h3>User management</h3>
         <p>Manage all users</p>
       </a>
