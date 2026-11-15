@@ -7,6 +7,7 @@
 <script lang="ts">
   import IcApi from "~icons/ic/outline-api";
   import IcBarChart from "~icons/ic/outline-bar-chart";
+  import IcFavorite from "~icons/ic/outline-favorite";
   import Protected from "#lib/components/Protected.svelte";
   import PageHead from "#lib/components/PageHead.svelte";
 </script>
@@ -37,6 +38,11 @@
         <span class="tile-icon"><IcBarChart width="22" height="22" /></span>
         <h3>Metrics</h3>
         <p>Fronting and switching statistics</p>
+      </a>
+      <a class="tile" href="/relationships">
+        <span class="tile-icon"><IcFavorite width="22" height="22" /></span>
+        <h3>Relationship map</h3>
+        <p>Who is dating who</p>
       </a>
     </div>
   </div>
