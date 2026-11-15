@@ -6,7 +6,8 @@
 
 import { createRoute, z } from "@hono/zod-openapi";
 
-import { router, ok } from "../openapi";
+import { router, ok, signedIn } from "../openapi";
+import { requireAuth } from "../middleware/auth";
 import { FrontingTimeSchema, SwitchFrequencySchema } from "../schemas";
 import { getFrontingTimeMetrics, getSwitchFrequencyMetrics } from "../services/metrics";
 
@@ -22,6 +23,8 @@ metricsRoutes.openapi(
     path: "/metrics/fronting-time",
     tags: ["Metrics"],
     summary: "Time each member spent fronting",
+    security: signedIn,
+    middleware: [requireAuth] as const,
     request: {
       query: DaysQuery,
     },
@@ -39,6 +42,8 @@ metricsRoutes.openapi(
     path: "/metrics/switch-frequency",
     tags: ["Metrics"],
     summary: "How often the system switched",
+    security: signedIn,
+    middleware: [requireAuth] as const,
     request: {
       query: DaysQuery,
     },

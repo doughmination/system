@@ -18,7 +18,7 @@ import { createMember, deleteMember, findMember, getMembers, updateMember } from
 import { getMemberTags, updateMemberTags, addMemberTag, removeMemberTag, enrichMembersWithTags } from "../services/tags";
 import { enrichMembersWithStatus } from "../services/status";
 import { getMemberPride, addMemberPride, removeMemberPride, enrichMembersWithPride } from "../services/pride";
-import { requireAuth, requireAdmin, requireOwner } from "../middleware/auth";
+import { requireAuth, requireOwner } from "../middleware/auth";
 import { HttpError } from "../errors";
 import type { JsonObject } from "../types";
 
@@ -73,9 +73,9 @@ membersRoutes.openapi(
     method: "post",
     path: "/members",
     tags: ["Members"],
-    summary: "Create a member (admin)",
+    summary: "Create a member (owner)",
     security: signedIn,
-    middleware: [requireAuth, requireAdmin] as const,
+    middleware: [requireAuth, requireOwner] as const,
     request: jsonBody(MemberCreateSchema),
     responses: ok(MemberSchema, "The new member"),
   }),
@@ -87,9 +87,9 @@ membersRoutes.openapi(
     method: "patch",
     path: "/members/{member_identifier}",
     tags: ["Members"],
-    summary: "Edit a member (admin). Send only the fields to change; null clears one",
+    summary: "Edit a member (owner). Send only the fields to change; null clears one",
     security: signedIn,
-    middleware: [requireAuth, requireAdmin] as const,
+    middleware: [requireAuth, requireOwner] as const,
     request: {
       params: IdentifierParam,
       ...jsonBody(MemberUpdateSchema),
@@ -129,9 +129,9 @@ membersRoutes.openapi(
     method: "get",
     path: "/member-tags",
     tags: ["Tags"],
-    summary: "Every member's tags (admin)",
+    summary: "Every member's tags (owner)",
     security: signedIn,
-    middleware: [requireAuth, requireAdmin] as const,
+    middleware: [requireAuth, requireOwner] as const,
     responses: ok(
       z.object({
         status: z.string(),
@@ -147,9 +147,9 @@ membersRoutes.openapi(
     method: "post",
     path: "/member-tags/{member_identifier}",
     tags: ["Tags"],
-    summary: "Replace a member's tags (admin)",
+    summary: "Replace a member's tags (owner)",
     security: signedIn,
-    middleware: [requireAuth, requireAdmin] as const,
+    middleware: [requireAuth, requireOwner] as const,
     request: {
       params: IdentifierParam,
       ...jsonBody(z.array(z.string())),
@@ -169,9 +169,9 @@ membersRoutes.openapi(
     method: "post",
     path: "/member-tags/{member_identifier}/add",
     tags: ["Tags"],
-    summary: "Add one tag to a member (admin)",
+    summary: "Add one tag to a member (owner)",
     security: signedIn,
-    middleware: [requireAuth, requireAdmin] as const,
+    middleware: [requireAuth, requireOwner] as const,
     request: {
       params: IdentifierParam,
       ...jsonBody(z.object({ tag: z.string().min(1) })),
@@ -193,9 +193,9 @@ membersRoutes.openapi(
     method: "delete",
     path: "/member-tags/{member_identifier}/{tag}",
     tags: ["Tags"],
-    summary: "Remove one tag from a member (admin)",
+    summary: "Remove one tag from a member (owner)",
     security: signedIn,
-    middleware: [requireAuth, requireAdmin] as const,
+    middleware: [requireAuth, requireOwner] as const,
     request: {
       params: IdentifierParam.extend({ tag: z.string() }),
     },

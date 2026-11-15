@@ -30,10 +30,10 @@
     {#if auth.signedIn}
       <span class="who">Signed in as <strong>{auth.displayName}</strong></span>
     {/if}
-    <a href="/user/metrics">
-      <iconsax-icon name="chart-2" type="bulk" size="24" class="nav-icon"></iconsax-icon>Metrics
-    </a>
     {#if auth.signedIn}
+      <a href="/user/metrics">
+        <iconsax-icon name="chart-2" type="bulk" size="24" class="nav-icon"></iconsax-icon>Metrics
+      </a>
       {#if auth.isOwner}
         <a href="/owner/dash">
           <iconsax-icon name="crown" type="bulk" size="24" class="nav-icon"></iconsax-icon>Owner

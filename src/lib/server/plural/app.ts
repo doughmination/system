@@ -10,6 +10,7 @@ import { cors } from "hono/cors";
 import type { Env } from "./hono";
 import { HttpError } from "./errors";
 import { corsOrigins, isLocalhostOrigin } from "./config";
+import { requireAuth } from "./middleware/auth";
 import { initializeAdminUser } from "./services/users";
 
 import { authRoutes } from "./routes/auth";
@@ -79,6 +80,9 @@ app.openAPIRegistry.registerComponent("securitySchemes", "bearerAuth", {
   bearerFormat: "JWT",
   description: "The token from an SSO sign-in (24 hours). Some routes also need the admin, owner or pet role",
 });
+
+// The spec is for signed-in users only
+app.use("/openapi.json", requireAuth);
 
 app.doc31("/openapi.json", {
   openapi: "3.1.0",

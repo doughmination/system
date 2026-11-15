@@ -9,6 +9,7 @@
   import { avatarFallback, fallbackAvatar, type Message as MessageType } from "#lib";
   import { client, readToken } from "#lib/api.ts";
   import PageHead from "#lib/components/PageHead.svelte";
+  import Protected from "#lib/components/Protected.svelte";
   import Message from "#lib/components/Message.svelte";
 
   type Timeframe = "24h" | "48h" | "5d" | "7d" | "30d";
@@ -132,7 +133,7 @@
           type: "error",
           content:
             frontingRes.status === 401 || switchRes.status === 401
-              ? "Metrics are not available publicly yet"
+              ? "Sign in to see metrics"
               : "Failed to fetch metrics",
         };
       }
@@ -151,125 +152,127 @@
   <title>Metrics · Doughmination System</title>
 </svelte:head>
 
-<div class="page">
-  <PageHead
-    eyebrow="// system.metrics"
-    title="Metrics"
-    subtitle="System fronting and switching statistics"
-    back={{
-      href: "/",
-      label: "Back to home",
-    }}
-  />
+<Protected>
+  <div class="page">
+    <PageHead
+      eyebrow="// system.metrics"
+      title="Metrics"
+      subtitle="System fronting and switching statistics"
+      back={{
+        href: "/",
+        label: "Back to home",
+      }}
+    />
 
-  <Message {message} />
+    <Message {message} />
 
-  {#if loading}
-    <p class="muted">Loading metrics…</p>
-  {:else}
-    <label class="field timeframe">
-      <span>Timeframe</span>
-      <select bind:value={timeframe}>
-        {#each TIMEFRAMES as option (option.value)}
-          <option value={option.value}>{option.label}</option>
-        {/each}
-      </select>
-    </label>
+    {#if loading}
+      <p class="muted">Loading metrics…</p>
+    {:else}
+      <label class="field timeframe">
+        <span>Timeframe</span>
+        <select bind:value={timeframe}>
+          {#each TIMEFRAMES as option (option.value)}
+            <option value={option.value}>{option.label}</option>
+          {/each}
+        </select>
+      </label>
 
-    {#if switches}
-      <div class="tiles">
-        <div class="panel stat">
-          <p class="eyebrow">Total switches</p>
-          <p class="value">{switches.total_switches}</p>
-          <p class="muted small">Last 30 days</p>
+      {#if switches}
+        <div class="tiles">
+          <div class="panel stat">
+            <p class="eyebrow">Total switches</p>
+            <p class="value">{switches.total_switches}</p>
+            <p class="muted small">Last 30 days</p>
+          </div>
+          <div class="panel stat">
+            <p class="eyebrow">Avg per day</p>
+            <p class="value">{switches.avg_switches_per_day.toFixed(1)}</p>
+            <p class="muted small">Switches per day</p>
+          </div>
+          <div class="panel stat">
+            <p class="eyebrow">Selected period</p>
+            <p class="value">{switches.timeframes[timeframe]}</p>
+            <p class="muted small">{timeframeLabel}</p>
+          </div>
         </div>
-        <div class="panel stat">
-          <p class="eyebrow">Avg per day</p>
-          <p class="value">{switches.avg_switches_per_day.toFixed(1)}</p>
-          <p class="muted small">Switches per day</p>
-        </div>
-        <div class="panel stat">
-          <p class="eyebrow">Selected period</p>
-          <p class="value">{switches.timeframes[timeframe]}</p>
-          <p class="muted small">{timeframeLabel}</p>
-        </div>
-      </div>
-    {/if}
+      {/if}
 
-    {#if fronting && top.length > 0}
-      <section class="panel">
-        <h2>Fronting time distribution</h2>
-        <p class="muted small">Top fronters for {timeframeLabel.toLowerCase()}</p>
-        <div class="donut-row">
-          <svg viewBox="0 0 200 200" class="donut" role="img" aria-label="Fronting time by member">
-            <g transform="rotate(-90 100 100)">
+      {#if fronting && top.length > 0}
+        <section class="panel">
+          <h2>Fronting time distribution</h2>
+          <p class="muted small">Top fronters for {timeframeLabel.toLowerCase()}</p>
+          <div class="donut-row">
+            <svg viewBox="0 0 200 200" class="donut" role="img" aria-label="Fronting time by member">
+              <g transform="rotate(-90 100 100)">
+                {#each slices as slice (slice.member.id)}
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r={RADIUS}
+                    fill="none"
+                    stroke={slice.colour}
+                    stroke-width="28"
+                    stroke-dasharray={slice.dash}
+                    stroke-dashoffset={slice.offset}
+                  >
+                    <title>{slice.member.display_name || slice.member.name}: {duration(slice.member[timeframe])}</title>
+                  </circle>
+                {/each}
+              </g>
+            </svg>
+            <ul class="legend">
               {#each slices as slice (slice.member.id)}
-                <circle
-                  cx="100"
-                  cy="100"
-                  r={RADIUS}
-                  fill="none"
-                  stroke={slice.colour}
-                  stroke-width="28"
-                  stroke-dasharray={slice.dash}
-                  stroke-dashoffset={slice.offset}
-                >
-                  <title>{slice.member.display_name || slice.member.name}: {duration(slice.member[timeframe])}</title>
-                </circle>
+                <li>
+                  <span class="key" style:background={slice.colour}></span>
+                  {slice.member.display_name || slice.member.name}
+                  <span class="muted">{slice.percent.toFixed(0)}%</span>
+                </li>
               {/each}
-            </g>
-          </svg>
-          <ul class="legend">
-            {#each slices as slice (slice.member.id)}
+            </ul>
+          </div>
+        </section>
+      {/if}
+
+      {#if switches}
+        <section class="panel">
+          <h2>Switch frequency over time</h2>
+          <p class="muted small">Number of switches across different timeframes</p>
+          <div class="bars">
+            {#each TIMEFRAMES as option (option.value)}
+              <div class="bar-col">
+                <span class="small">{switches.timeframes[option.value]}</span>
+                <div class="bar" style:height="{(switches.timeframes[option.value] / switchMax) * 100}%"></div>
+                <span class="muted small">{option.value}</span>
+              </div>
+            {/each}
+          </div>
+        </section>
+      {/if}
+
+      {#if fronting && top.length > 0}
+        <section class="panel">
+          <h2>Top fronters</h2>
+          <p class="muted small">Most active members for {timeframeLabel.toLowerCase()}</p>
+          <ol class="ranking">
+            {#each top as member, index (member.id)}
               <li>
-                <span class="key" style:background={slice.colour}></span>
-                {slice.member.display_name || slice.member.name}
-                <span class="muted">{slice.percent.toFixed(0)}%</span>
+                <span class="rank">{index + 1}</span>
+                <img class="member-avatar avatar-sm" src={member.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />
+                <div class="grow">
+                  <p>{member.display_name || member.name} <span class="muted small">{duration(member[timeframe])}</span></p>
+                  <div class="meter"><div style:width="{(member[timeframe] / top[0]![timeframe]) * 100}%"></div></div>
+                </div>
               </li>
             {/each}
-          </ul>
-        </div>
-      </section>
+          </ol>
+        </section>
+      {:else if fronting}
+        <p class="panel muted">No fronting data available for the selected timeframe</p>
+      {/if}
     {/if}
-
-    {#if switches}
-      <section class="panel">
-        <h2>Switch frequency over time</h2>
-        <p class="muted small">Number of switches across different timeframes</p>
-        <div class="bars">
-          {#each TIMEFRAMES as option (option.value)}
-            <div class="bar-col">
-              <span class="small">{switches.timeframes[option.value]}</span>
-              <div class="bar" style:height="{(switches.timeframes[option.value] / switchMax) * 100}%"></div>
-              <span class="muted small">{option.value}</span>
-            </div>
-          {/each}
-        </div>
-      </section>
-    {/if}
-
-    {#if fronting && top.length > 0}
-      <section class="panel">
-        <h2>Top fronters</h2>
-        <p class="muted small">Most active members for {timeframeLabel.toLowerCase()}</p>
-        <ol class="ranking">
-          {#each top as member, index (member.id)}
-            <li>
-              <span class="rank">{index + 1}</span>
-              <img class="member-avatar avatar-sm" src={member.avatar_url || fallbackAvatar} alt="" onerror={avatarFallback} />
-              <div class="grow">
-                <p>{member.display_name || member.name} <span class="muted small">{duration(member[timeframe])}</span></p>
-                <div class="meter"><div style:width="{(member[timeframe] / top[0]![timeframe]) * 100}%"></div></div>
-              </div>
-            </li>
-          {/each}
-        </ol>
-      </section>
-    {:else if fronting}
-      <p class="panel muted">No fronting data available for the selected timeframe</p>
-    {/if}
-  {/if}
-</div>
+  </div>
+</Protected>
 
 <style>
   h2,

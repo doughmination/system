@@ -7,6 +7,7 @@
 <script lang="ts">
   import { errorText, type Message as MessageType } from "#lib";
   import { client } from "#lib/api.ts";
+  import { auth } from "#lib/auth.svelte.ts";
   import Protected from "#lib/components/Protected.svelte";
   import PageHead from "#lib/components/PageHead.svelte";
   import Message from "#lib/components/Message.svelte";
@@ -14,6 +15,7 @@
   const PAGES = [
     {
       href: "/admin/members",
+      owner: true,
       label: "Member manager",
       icon: "profile-2user",
       desc: "Create and edit members, import data",
@@ -38,23 +40,29 @@
     },
     {
       href: "/admin/tags",
+      owner: true,
       label: "Tag manager",
       icon: "tag",
       desc: "Manage member tags",
     },
     {
       href: "/admin/pride",
+      owner: true,
       label: "Pride manager",
       icon: "flag",
       desc: "Set member pride identities",
     },
     {
       href: "/admin/relationships",
+      owner: true,
       label: "Relationships",
       icon: "lovely",
       desc: "Map who is dating who",
     },
   ];
+
+  // Owner-only pages are hidden from admins
+  const visiblePages = $derived(PAGES.filter((page) => !page.owner || auth.isOwner));
 
   let refreshing = $state(false);
   let message = $state<MessageType>(null);
@@ -114,14 +122,14 @@
     </section>
 
     <div class="tiles">
-      {#each PAGES as page (page.href)}
+      {#each visiblePages as page (page.href)}
         <a class="tile" href={page.href}>
           <span class="tile-icon"><iconsax-icon name={page.icon} type="bulk" size="22"></iconsax-icon></span>
           <h3>{page.label}</h3>
           <p>{page.desc}</p>
         </a>
       {/each}
-      <a class="tile" href="/api/openapi.json" target="_blank" rel="noopener noreferrer">
+      <a class="tile" href="/user/docs">
         <span class="tile-icon"><iconsax-icon name="driver" type="bulk" size="22"></iconsax-icon></span>
         <h3>API endpoints</h3>
         <p>OpenAPI spec for this site</p>

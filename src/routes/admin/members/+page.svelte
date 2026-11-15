@@ -216,7 +216,7 @@
   <title>Member manager · Doughmination System</title>
 </svelte:head>
 
-<Protected admin>
+<Protected owner>
   <div class="page">
     <PageHead
       eyebrow="Admin"
