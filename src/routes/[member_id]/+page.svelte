@@ -39,7 +39,7 @@
   <meta property="og:title" content="{name} · {siteName}" />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={pageUrl} />
-  <meta property="og:image" content={avatar} />
+  <meta property="og:image" content={new URL(avatar, siteUrl).href} />
   <meta property="og:image:alt" content={name} />
   <meta name="twitter:card" content="summary" />
 </svelte:head>

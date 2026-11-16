@@ -36,6 +36,9 @@
 
   const pageUrl = $derived(siteUrl + page.url.pathname);
 
+  // Discord drops the whole embed if the thumbnail URL isn't absolute
+  const imageUrl = $derived(new URL(image, siteUrl).href);
+
   const shortDescription = $derived(
     description.length > maxDescription
       ? description.slice(0, maxDescription - 1) + "…"
@@ -62,7 +65,7 @@
           ],
           accessory: {
             type: 11,
-            media: { url: image },
+            media: { url: imageUrl },
           },
         },
         { type: 14 },

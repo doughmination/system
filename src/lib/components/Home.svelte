@@ -138,7 +138,7 @@
   <meta property="og:title" content="Doughmination System | Plural System Tracker" />
   <meta property="og:description" content="Real-time plural system tracker. View current fronters and members of the Doughmination System." />
   <meta property="og:url" content="{siteUrl}/" />
-  <meta property="og:image" content={fallbackAvatar} />
+  <meta property="og:image" content={new URL(fallbackAvatar, siteUrl).href} />
   <meta name="twitter:card" content="summary" />
 </svelte:head>
 
