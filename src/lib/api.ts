@@ -34,7 +34,7 @@ export function apiBase(origin: string): string {
 }
 
 // Live updates come from the shared hub on the api Worker
-export const socketUrl = "wss://doughmination.uk/v2/ws";
+export const socketUrl = "wss://doughmination.co.uk/api/plural/ws";
 
 /** A client for load functions: SvelteKit's fetch, no token */
 export function publicClient(fetcher: typeof fetch, origin: string): DoughminationClient {

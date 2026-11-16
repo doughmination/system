@@ -4,6 +4,7 @@
  * See LICENCE.md in the project root for full licence information.
  */
 
+import { LIVE_HUB_NAME } from "./config";
 import type { PluralEnv } from "./types";
 
 // JSON blob store over the D1 `kv` table, the same shape the old DO store had
@@ -74,7 +75,7 @@ export function setRuntime(env: PluralEnv): void {
     store: d1Store(env.DB),
     broadcast: async (data) => {
       try {
-        await env.HUB.broadcast(data);
+        await env.LIVE.get(env.LIVE.idFromName(LIVE_HUB_NAME)).broadcast(data);
       } catch (err) {
         // A dropped live update must never fail the write that caused it
         console.error(`Realtime broadcast failed: ${String(err)}`);

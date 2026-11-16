@@ -7,7 +7,7 @@
 import { invalidate } from "$app/navigation";
 import { socketUrl } from "./api.ts";
 
-// The API's socket: fronters and mental state changes, and admin "reload everyone"
+// This site's own socket (/api/plural/ws): fronters, mental state and admin "reload everyone"
 const PING_MS = 30_000;
 const PONG_TIMEOUT_MS = 10_000;
 const MAX_BACKOFF_MS = 30_000;

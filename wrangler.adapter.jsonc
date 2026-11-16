@@ -1,0 +1,13 @@
+// wrangler.adapter.jsonc
+// Build-only: tells adapter-cloudflare where to write the SvelteKit worker.
+// The real config (wrangler.jsonc) deploys src/worker.ts, which wraps that output.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "doughmination-system",
+  "main": ".svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".svelte-kit/cloudflare"
+  }
+}

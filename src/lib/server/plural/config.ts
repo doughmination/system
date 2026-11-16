@@ -98,3 +98,9 @@ export function corsOrigins(): string[] {
     .filter(Boolean);
   return [...new Set([...defaults, ...extra])];
 }
+
+// The public live socket, answered in src/worker.ts before SvelteKit sees the request
+export const LIVE_SOCKET_PATH = "/api/plural/ws";
+
+// One LiveHub instance holds every socket, so a broadcast reaches all of them
+export const LIVE_HUB_NAME = "live";

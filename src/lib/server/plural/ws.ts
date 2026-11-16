@@ -4,7 +4,7 @@
  * See LICENCE.md in the project root for full licence information.
  */
 
-// Live events go out on the api Worker's /v2/ws hub, which every site already listens to
+// Live events go out on this site's own hub at /api/plural/ws (see hub.ts)
 import { rt } from "./runtime";
 
 export function broadcastFrontingUpdate(frontersData: unknown): Promise<void> {

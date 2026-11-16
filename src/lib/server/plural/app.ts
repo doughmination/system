@@ -91,7 +91,7 @@ app.doc31("/openapi.json", {
     version: "3.0.0",
     description:
       "The plural system behind doughmination.co.uk. Live updates (fronters_update, mental_state_update, force_refresh) " +
-      "arrive on the WebSocket at wss://doughmination.uk/v2/ws.",
+      "arrive on the WebSocket at wss://doughmination.co.uk/api/plural/ws.",
   },
   servers: [
     {

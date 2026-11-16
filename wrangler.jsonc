@@ -2,7 +2,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "doughmination-system",
-  "main": ".svelte-kit/cloudflare/_worker.js",
+  // Wraps the SvelteKit build so it can export the LiveHub Durable Object
+  "main": "src/worker.ts",
   "account_id": "f87ee4b9600f437b8da1104d077418c3",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": [
@@ -31,12 +32,21 @@
       "bucket_name": "doughmination-system-media"
     }
   ],
-  // The api Worker's realtime hub (/v2/ws). RPC only, never public
-  "services": [
+  // The live socket at /api/plural/ws: fronting, mental state and force refresh
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "LIVE",
+        "class_name": "LiveHub"
+      }
+    ]
+  },
+  "migrations": [
     {
-      "binding": "HUB",
-      "service": "api",
-      "entrypoint": "Hub"
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "LiveHub"
+      ]
     }
   ],
   "vars": {

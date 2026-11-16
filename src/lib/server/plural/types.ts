@@ -4,15 +4,13 @@
  * See LICENCE.md in the project root for full licence information.
  */
 
-// The api Worker's `Hub` entrypoint, reached over the HUB service binding
-export interface HubRpc {
-  broadcast(data: unknown): Promise<void>;
-}
+import type { LiveHub } from "./hub";
 
 export interface PluralEnv {
   DB: D1Database;
   MEDIA: R2Bucket;
-  HUB: Fetcher & HubRpc;
+  // This site's own live socket hub (src/lib/server/plural/hub.ts)
+  LIVE: DurableObjectNamespace<LiveHub>;
 
   // Secrets
   JWT_SECRET?: string;

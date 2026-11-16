@@ -16,7 +16,13 @@ export default defineConfig({
         // Runes everywhere except libraries
         runes: ({ filename }) => (filename.split(/[/\\]/).includes("node_modules") ? undefined : true),
       },
-      adapter: adapter(),
+      // The adapter writes its worker per wrangler.adapter.jsonc; wrangler.jsonc deploys the src/worker.ts wrapper
+      adapter: adapter({
+        config: "wrangler.adapter.jsonc",
+        platformProxy: {
+          configPath: "wrangler.jsonc",
+        },
+      }),
       // /api is bearer-token only (no cookies) and the site has no form actions, so the origin check guards nothing
       // and would block body-less calls from the app and other sites
       csrf: {
