@@ -60,10 +60,11 @@ export async function removeMemberTag(memberIdentifier: string, tag: string): Pr
 }
 
 export async function enrichMembersWithTags(members: JsonObject[]): Promise<JsonObject[]> {
-  const enriched: JsonObject[] = [];
-  for (const member of members) {
-    const tags = await getMemberTagsById(member.id ?? "", member.name ?? "");
-    enriched.push({ ...member, tags });
-  }
-  return enriched;
+  // One store read for the whole list, not one per member
+  const memberTags = await getMemberTags();
+
+  return members.map((member) => ({
+    ...member,
+    tags: memberTags[member.name ?? ""] ?? memberTags[member.id ?? ""] ?? [],
+  }));
 }

@@ -73,10 +73,11 @@ export async function removeMemberPride(
 }
 
 export async function enrichMembersWithPride(members: JsonObject[]): Promise<JsonObject[]> {
-  const enriched: JsonObject[] = [];
-  for (const member of members) {
-    const pride = await getMemberPrideById(member.id ?? "", member.name ?? "");
-    enriched.push({ ...member, pride });
-  }
-  return enriched;
+  // One store read for the whole list, not one per member
+  const memberPride = await getMemberPride();
+
+  return members.map((member) => ({
+    ...member,
+    pride: memberPride[member.name ?? ""] ?? memberPride[member.id ?? ""] ?? [],
+  }));
 }

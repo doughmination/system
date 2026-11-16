@@ -68,5 +68,16 @@ export async function enrichMemberWithStatus(member: JsonObject): Promise<JsonOb
 }
 
 export async function enrichMembersWithStatus(members: JsonObject[]): Promise<JsonObject[]> {
-  return Promise.all(members.map((member) => enrichMemberWithStatus(member)));
+  // One store read for the whole list, not two per member
+  const statuses = await getAllStatuses();
+
+  return members.map((member) => {
+    const byId = member.id ? statuses[String(member.id)] : undefined;
+    const byName = member.name ? statuses[member.name] : undefined;
+
+    return {
+      ...member,
+      status: byId ?? byName ?? null,
+    };
+  });
 }
