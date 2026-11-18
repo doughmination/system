@@ -12,7 +12,8 @@
 
 import type { Context, Next } from "hono";
 import type { Env } from "../hono";
-import { decodeAccessToken } from "../security";
+import { constantTimeStringEqual, decodeAccessToken } from "../security";
+import { rt } from "../runtime";
 import { HttpError } from "../errors";
 import { getUserByUsername } from "../services/users";
 import { currentSsoSession } from "../services/sso_sessions";
@@ -58,6 +59,19 @@ async function resolveCurrentUser(c: Context<Env>): Promise<User> {
 export async function requireAuth(c: Context<Env>, next: Next): Promise<void> {
   c.set("user", await resolveCurrentUser(c));
   await next();
+}
+
+// For routes the bot may call: its token passes, anyone else needs a normal sign-in
+export async function requireAuthOrBot(c: Context<Env>, next: Next): Promise<void> {
+  const botToken = rt().env.BOT_TOKEN;
+  const token = extractBearer(c);
+
+  if (botToken && token && constantTimeStringEqual(token, botToken)) {
+    await next();
+    return;
+  }
+
+  await requireAuth(c, next);
 }
 
 /** Attach user if authenticated, otherwise leave undefined. Never rejects. */

@@ -16,6 +16,8 @@ export interface PluralEnv {
   JWT_SECRET?: string;
   SSO_CLIENT_ID?: string;
   SSO_CLIENT_SECRET?: string;
+  // Shared with proxyBot so it can switch without an SSO sign-in
+  BOT_TOKEN?: string;
 
   // Vars
   SSO_ISSUER?: string;

@@ -11,7 +11,7 @@ import { FrontersSchema, MessageSchema, SwitchSchema } from "../schemas";
 import { deleteSwitch, getFronters, getMembers, getSwitches, setFront } from "../services/system";
 import { enrichMembersWithTags } from "../services/tags";
 import { enrichMembersWithStatus } from "../services/status";
-import { requireAuth, requireAdmin } from "../middleware/auth";
+import { requireAuth, requireAuthOrBot, requireAdmin } from "../middleware/auth";
 import { broadcastFrontingUpdate } from "../ws";
 import { HttpError } from "../errors";
 import type { JsonObject } from "../types";
@@ -91,9 +91,9 @@ frontingRoutes.openapi(
     method: "post",
     path: "/switch",
     tags: ["Fronting"],
-    summary: "Set the front. An empty list means switch-out",
+    summary: "Set the front. An empty list means switch-out. proxyBot's token works here too",
     security: signedIn,
-    middleware: [requireAuth] as const,
+    middleware: [requireAuthOrBot] as const,
     request: jsonBody(z.object({ members: z.array(z.string()).default([]) })),
     responses: ok(MessageSchema),
   }),
