@@ -37,7 +37,7 @@
         const list = byTag.get(tag) ?? [];
         list.push({
           method: method.toUpperCase(),
-          path: `/api${path}`,
+          path,
           summary: operation.summary ?? "",
           signedIn: Boolean(operation.security?.length),
         });
