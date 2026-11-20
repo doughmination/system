@@ -42,11 +42,6 @@
       placeholder: "YYYY-MM-DD, year 0004 hides it",
     },
     {
-      key: "avatar_url",
-      label: "Avatar URL",
-      placeholder: "https://…",
-    },
-    {
       key: "banner",
       label: "Banner URL",
       placeholder: "https://…",
@@ -73,7 +68,6 @@
       pronouns: "",
       color: "",
       birthday: "",
-      avatar_url: "",
       banner: "",
       description: "",
       proxy_tags: "",
@@ -101,6 +95,8 @@
 
   function pick(member: PluralMember | null) {
     chosenId = member?.id ?? null;
+    // A picked image belongs to the member it was picked for
+    avatarFile = new DataTransfer().files;
     message = null;
     if (!member) {
       form = emptyForm();
@@ -112,7 +108,6 @@
       pronouns: member.pronouns ?? "",
       color: member.color ?? "",
       birthday: member.birthday ?? "",
-      avatar_url: member.avatar_url ?? "",
       banner: member.banner ?? "",
       description: member.description ?? "",
       proxy_tags: tagsToText(member.proxy_tags),
@@ -165,35 +160,36 @@
     event.preventDefault();
     if (!form.name.trim()) return;
 
+    // Read before pick() below clears them
+    const creating = !chosenId;
+    const file = avatarFile?.[0];
+
     void run(async () => {
       const path = chosenId ? `/plural/members/${encodeURIComponent(chosenId)}` : "/plural/members";
       const saved = await authFetch<PluralMember>(path, {
         method: chosenId ? "PATCH" : "POST",
         body: JSON.stringify(body()),
       }, "Failed to save member");
+
+      // Select the saved member first, so a failed upload can't lead to creating them twice
       await reload();
       pick(members.find((member) => member.id === saved.id) ?? null);
-      return chosenId ? "Member saved!" : "Member created!";
+
+      // The picked image waited in the form until the member existed
+      if (file) {
+        await authFetch(`/plural/members/${encodeURIComponent(saved.id)}/avatar`, {
+          method: "POST",
+          headers: {
+            "Content-Type": file.type,
+          },
+          body: file,
+        }, "Member saved, but the avatar upload failed");
+        await reload();
+        pick(members.find((member) => member.id === saved.id) ?? null);
+      }
+
+      return creating ? "Member created!" : "Member saved!";
     }, "Failed to save member");
-  }
-
-  function uploadAvatar() {
-    const file = avatarFile?.[0];
-    if (!chosen || !file) return;
-
-    void run(async () => {
-      await authFetch(`/plural/members/${encodeURIComponent(chosen.id)}/avatar`, {
-        method: "POST",
-        headers: {
-          "Content-Type": file.type,
-        },
-        body: file,
-      }, "Failed to upload avatar");
-      avatarFile = null;
-      await reload();
-      pick(members.find((member) => member.id === chosenId) ?? null);
-      return "Avatar uploaded!";
-    }, "Failed to upload avatar");
   }
 
   function remove() {
@@ -240,6 +236,16 @@
             </label>
           {/each}
 
+          {#if auth.isOwner}
+            <label class="field">
+              <span>Avatar</span>
+              <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" bind:files={avatarFile} />
+              <small class="muted">
+                {chosen ? "Uploads when you save. Replaces the current avatar and the proxy avatar" : "Uploads when you create the member"}. PNG, JPEG, GIF or WebP, up to 10 MB
+              </small>
+            </label>
+          {/if}
+
           <label class="field">
             <span>Description</span>
             <textarea bind:value={form.description} maxlength="1000" rows="4"></textarea>
@@ -250,15 +256,6 @@
             <textarea bind:value={form.proxy_tags} rows="2" placeholder={"c:text\n[text]"}></textarea>
             <small class="muted">One per line. "text" marks where the message goes</small>
           </label>
-
-          {#if chosen && auth.isOwner}
-            <div class="field">
-              <span>Upload avatar</span>
-              <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" bind:files={avatarFile} />
-              <button type="button" disabled={saving || !avatarFile?.length} onclick={uploadAvatar}>Upload avatar</button>
-              <small class="muted">Replaces the current avatar, and the proxy avatar too. Up to 10 MB</small>
-            </div>
-          {/if}
 
           <div class="buttons">
             <button type="submit" class="primary" disabled={saving || !form.name.trim()}>
