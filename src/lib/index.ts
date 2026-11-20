@@ -4,7 +4,7 @@
  * See LICENCE.md in the project root for full licence information.
  */
 
-import type { PluralMember } from "doughmination-api/server";
+import type { PluralMember } from "#lib/types.ts";
 
 export const siteName = "Doughmination System";
 

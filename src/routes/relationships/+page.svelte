@@ -5,7 +5,7 @@
 -->
 
 <script lang="ts">
-  import type { PluralMember } from "doughmination-api/server";
+  import type { PluralMember } from "#lib/types.ts";
   import { avatarFallback, fallbackAvatar, memberName } from "#lib";
   import PageHead from "#lib/components/PageHead.svelte";
   import RelationshipGraph from "#lib/components/RelationshipGraph.svelte";

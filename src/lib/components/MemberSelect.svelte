@@ -5,7 +5,7 @@
 -->
 
 <script lang="ts">
-  import type { PluralMember } from "doughmination-api/server";
+  import type { PluralMember } from "#lib/types.ts";
   import { memberName } from "#lib";
 
   // A native picker keyed by member name, the identifier the admin endpoints take

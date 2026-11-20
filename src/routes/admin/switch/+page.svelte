@@ -6,7 +6,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { PluralMember } from "doughmination-api/server";
+  import type { PluralMember } from "#lib/types.ts";
   import { avatarFallback, errorText, fallbackAvatar, memberName, sortMembers, type Message as MessageType } from "#lib";
   import { client } from "#lib/api.ts";
   import Protected from "#lib/components/Protected.svelte";

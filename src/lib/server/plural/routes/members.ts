@@ -20,7 +20,7 @@ import { enrichMembersWithStatus } from "../services/status";
 import { getMemberPride, addMemberPride, removeMemberPride, enrichMembersWithPride } from "../services/pride";
 import { requireAuth, requireOwner } from "../middleware/auth";
 import { HttpError } from "../errors";
-import { MAX_MEDIA_BYTES, mediaUrl } from "../services/importer";
+import { MAX_MEDIA_BYTES, mediaUrl } from "../services/media";
 import { rt } from "../runtime";
 import { broadcastFrontendUpdate } from "../ws";
 import type { JsonObject } from "../types";
@@ -138,7 +138,7 @@ membersRoutes.openapi(
     if (body.byteLength === 0) throw new HttpError(400, "The image is empty");
     if (body.byteLength > MAX_MEDIA_BYTES) throw new HttpError(413, "The image is over 10 MB");
 
-    // Same key the importer uses, so an upload overwrites the imported image
+    // One fixed key per member, so each upload overwrites the last
     const key = `member-${member.id}-avatar_url`;
     await rt().env.MEDIA.put(key, body, {
       httpMetadata: {

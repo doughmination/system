@@ -6,7 +6,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { PluralMember, Relationship } from "doughmination-api/server";
+  import type { PluralMember, Relationship } from "#lib/types.ts";
   import { fallbackAvatar, memberName } from "#lib";
   import { normalizeColor } from "#lib/colour.ts";
   import { layout, project } from "#lib/graph.ts";

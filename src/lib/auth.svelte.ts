@@ -4,7 +4,7 @@
  * See LICENCE.md in the project root for full licence information.
  */
 
-import type { UserResponse } from "doughmination-api/server";
+import type { UserResponse } from "#lib/types.ts";
 import { client, readToken, writeToken } from "./api.ts";
 
 // Who is signed in, shared by every page. Filled on the client only: the token lives in localStorage

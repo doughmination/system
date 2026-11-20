@@ -5,7 +5,7 @@
  */
 
 import { error } from "@sveltejs/kit";
-import type { PluralMember } from "doughmination-api/server";
+import type { PluralMember } from "#lib/types.ts";
 import type { PageLoad } from "./$types";
 import { publicClient } from "#lib/api.ts";
 

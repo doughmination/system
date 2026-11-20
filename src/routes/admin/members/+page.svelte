@@ -6,7 +6,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { PluralMember, PluralProxyTag } from "doughmination-api/server";
+  import type { PluralMember, PluralProxyTag } from "#lib/types.ts";
   import { avatarFallback, errorText, fallbackAvatar, memberName, sortMembers, type Message as MessageType } from "#lib";
   import { authFetch, client } from "#lib/api.ts";
   import { auth } from "#lib/auth.svelte.ts";
@@ -62,9 +62,7 @@
   let saving = $state(false);
   let message = $state<MessageType>(null);
 
-  let importFile = $state<FileList | null>(null);
   let avatarFile = $state<FileList | null>(null);
-  let replaceExisting = $state(false);
 
   const chosen = $derived(members.find((member) => member.id === chosenId) ?? null);
 
@@ -208,28 +206,6 @@
       return "Member deleted";
     }, "Failed to delete member");
   }
-
-  function importExport(event: SubmitEvent) {
-    event.preventDefault();
-    const file = importFile?.[0];
-    if (!file) return;
-
-    void run(async () => {
-      const query = `replace=${replaceExisting}`;
-      const report = await authFetch<{
-        members: number;
-        switches: number;
-        media_copied: number;
-        media_failed: string[];
-      }>(`/plural/admin/import/pluralkit?${query}`, {
-        method: "POST",
-        body: await file.text(),
-      }, "Import failed");
-      await reload();
-      const failed = report.media_failed.length ? `, ${report.media_failed.length} image(s) kept their old URL` : "";
-      return `Imported ${report.members} members and ${report.switches} switches, copied ${report.media_copied} image(s)${failed}`;
-    }, "Import failed");
-  }
 </script>
 
 <svelte:head>
@@ -310,31 +286,12 @@
                 </span>
               </button>
             {:else}
-              <p class="muted">No members yet. Import a PluralKit export below.</p>
+              <p class="muted">No members yet. Create one with the form.</p>
             {/each}
           </div>
         </section>
       </div>
 
-      {#if auth.isOwner}
-        <section class="panel stack import">
-          <h2>Import</h2>
-
-          <form class="stack" onsubmit={importExport}>
-            <label class="field">
-              <span>PluralKit export file (from pk;export)</span>
-              <input type="file" accept="application/json,.json" bind:files={importFile} />
-            </label>
-            <label class="check">
-              <input type="checkbox" bind:checked={replaceExisting} />
-              Replace the system already here, with its members and switch history
-            </label>
-            <div class="buttons">
-              <button type="submit" class="primary" disabled={saving || !importFile?.length}>Import export</button>
-            </div>
-          </form>
-        </section>
-      {/if}
     {/if}
   </div>
 </Protected>
@@ -349,7 +306,4 @@
     font-size: 1.05rem;
   }
 
-  .import {
-    margin-top: 1.25rem;
-  }
 </style>

@@ -19,7 +19,7 @@
   // A full navigation: the API redirects to the SSO, which comes back to /user/login/callback
   function signIn() {
     redirecting = true;
-    location.href = client.pocketIdLoginUrl(from);
+    location.href = client.loginUrl(from);
   }
 </script>
 

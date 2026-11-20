@@ -11,7 +11,7 @@
   import IcReportProblem from "~icons/ic/outline-report-problem";
   import IcWarningAmber from "~icons/ic/outline-warning-amber";
   import { onMount } from "svelte";
-  import type { MentalState } from "doughmination-api/server";
+  import type { MentalState } from "#lib/types.ts";
   import { errorText, type Message as MessageType } from "#lib";
   import { client } from "#lib/api.ts";
   import Protected from "#lib/components/Protected.svelte";

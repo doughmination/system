@@ -7,7 +7,7 @@
 <script lang="ts">
   import IcFavorite from "~icons/ic/outline-favorite";
   import { onMount } from "svelte";
-  import type { PluralMember, Relationship } from "doughmination-api/server";
+  import type { PluralMember, Relationship } from "#lib/types.ts";
   import { errorText, memberName, sortMembers, type Message as MessageType } from "#lib";
   import { client } from "#lib/api.ts";
   import Protected from "#lib/components/Protected.svelte";

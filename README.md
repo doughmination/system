@@ -1,14 +1,14 @@
 # Doughmination System
 
 A real-time plural system tracker for the Doughmination System — current fronters,
-system members, and switching patterns. Member data is pulled live from PluralKit
-through the Doughmination API, so pages render fresh on every request.
+system members, and switching patterns. Member data lives in this site's own API and
+D1 database, so pages render fresh on every request.
 
 ## Tech stack
 
 - [SvelteKit](https://svelte.dev/docs/kit) (Svelte 5)
 - Plain CSS, shared with [doughmination.gay](https://doughmination.gay)
-- `doughmination-api/server`'s typed client for data, plus its live socket
+- Its own API (Hono, D1, R2) at `/api/plural`, with a small typed client in `src/lib/api.ts` and a live socket
 - Deployed to **Cloudflare Workers** via `@sveltejs/adapter-cloudflare`
 
 ## Local development

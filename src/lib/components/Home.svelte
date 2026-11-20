@@ -13,7 +13,7 @@
   import IcReportProblem from "~icons/ic/outline-report-problem";
   import IcSearch from "~icons/ic/outline-search";
   import IcWarningAmber from "~icons/ic/outline-warning-amber";
-  import type { FrontersResponse, PluralMember, PluralSystem } from "doughmination-api/server";
+  import type { FrontersResponse, PluralMember, PluralSystem } from "#lib/types.ts";
   import { replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import { avatarFallback, fallbackAvatar, memberName, sortMembers, siteUrl } from "#lib";
