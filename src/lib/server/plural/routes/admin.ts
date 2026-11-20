@@ -37,7 +37,7 @@ adminRoutes.openapi(
     method: "post",
     path: "/admin/media/localise",
     tags: ["Admin"],
-    summary: "Move every member and system image onto this site (owner). Links that 404 are removed",
+    summary: "Move every member and system image onto this site (owner). Links that fail with 4xx or 5xx are removed",
     security: signedIn,
     middleware: [requireAuth, requireOwner] as const,
     responses: ok(

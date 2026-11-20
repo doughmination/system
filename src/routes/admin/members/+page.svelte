@@ -202,7 +202,7 @@
 
   // One-off: moves outside image links onto this site
   function localise() {
-    if (!confirm("Copy every member and system image onto this site? Links that 404 get removed.")) return;
+    if (!confirm("Copy every member and system image onto this site? Links that fail (4xx or 5xx) get removed.")) return;
 
     void run(async () => {
       const report = await authFetch<{
@@ -324,7 +324,7 @@
       {#if auth.isOwner}
         <section class="panel stack localise">
           <h2>Move images to this site</h2>
-          <p class="muted small">Copies every avatar and banner that still lives elsewhere into this site's storage. Links that 404 are removed.</p>
+          <p class="muted small">Copies every avatar and banner that still lives elsewhere into this site's storage. Links that fail with 4xx or 5xx are removed.</p>
           <div class="buttons">
             <button type="button" disabled={saving} onclick={localise}>Move images</button>
           </div>

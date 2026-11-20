@@ -24,7 +24,7 @@ function external(url: unknown): url is string {
   return typeof url === "string" && url !== "" && !url.startsWith(mediaUrl(""));
 }
 
-// Only 404 and 410 mean gone; anything else (403, 5xx, network) keeps the old link
+// Any 4xx or 5xx means gone; only a network failure keeps the old link
 async function copyInto(source: string, key: string): Promise<Outcome> {
   let response: Response;
   try {
@@ -36,8 +36,7 @@ async function copyInto(source: string, key: string): Promise<Outcome> {
     };
   }
 
-  if (response.status === 404 || response.status === 410) return { kind: "removed" };
-  if (!response.ok) return { kind: "kept", reason: `HTTP ${response.status}` };
+  if (response.status >= 400) return { kind: "removed" };
 
   const type = (response.headers.get("Content-Type") ?? "").split(";")[0]?.trim() ?? "";
   if (!IMAGE_TYPES.includes(type)) return { kind: "kept", reason: `not a PNG, JPEG, GIF or WebP (${type || "no type"})` };
