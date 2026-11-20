@@ -63,6 +63,7 @@
   let message = $state<MessageType>(null);
 
   let importFile = $state<FileList | null>(null);
+  let avatarFile = $state<FileList | null>(null);
   let replaceExisting = $state(false);
 
   const chosen = $derived(members.find((member) => member.id === chosenId) ?? null);
@@ -178,6 +179,25 @@
     }, "Failed to save member");
   }
 
+  function uploadAvatar() {
+    const file = avatarFile?.[0];
+    if (!chosen || !file) return;
+
+    void run(async () => {
+      await authFetch(`/plural/members/${encodeURIComponent(chosen.id)}/avatar`, {
+        method: "POST",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      }, "Failed to upload avatar");
+      avatarFile = null;
+      await reload();
+      pick(members.find((member) => member.id === chosenId) ?? null);
+      return "Avatar uploaded!";
+    }, "Failed to upload avatar");
+  }
+
   function remove() {
     if (!chosen || !confirm(`Delete ${memberName(chosen)}? Their past switches stay in the history.`)) return;
 
@@ -254,6 +274,15 @@
             <textarea bind:value={form.proxy_tags} rows="2" placeholder={"c:text\n[text]"}></textarea>
             <small class="muted">One per line. "text" marks where the message goes</small>
           </label>
+
+          {#if chosen && auth.isOwner}
+            <div class="field">
+              <span>Upload avatar</span>
+              <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" bind:files={avatarFile} />
+              <button type="button" disabled={saving || !avatarFile?.length} onclick={uploadAvatar}>Upload avatar</button>
+              <small class="muted">Replaces the current avatar, and the proxy avatar too. Up to 10 MB</small>
+            </div>
+          {/if}
 
           <div class="buttons">
             <button type="submit" class="primary" disabled={saving || !form.name.trim()}>

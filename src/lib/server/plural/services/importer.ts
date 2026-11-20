@@ -10,7 +10,7 @@ import { frontendUrl } from "../config";
 import type { JsonObject } from "../types";
 
 const MEDIA_FIELDS = ["avatar_url", "webhook_avatar_url", "banner"] as const;
-const MAX_MEDIA_BYTES = 10 * 1024 * 1024;
+export const MAX_MEDIA_BYTES = 10 * 1024 * 1024;
 
 // D1 caps how much one batch may carry, so big switch histories go in slices
 const BATCH_SIZE = 200;

@@ -20,6 +20,8 @@ import { enrichMembersWithStatus } from "../services/status";
 import { getMemberPride, addMemberPride, removeMemberPride, enrichMembersWithPride } from "../services/pride";
 import { requireAuth, requireOwner } from "../middleware/auth";
 import { HttpError } from "../errors";
+import { MAX_MEDIA_BYTES, mediaUrl } from "../services/importer";
+import { rt } from "../runtime";
 import type { JsonObject } from "../types";
 
 export const membersRoutes = router();
@@ -99,6 +101,50 @@ membersRoutes.openapi(
   async (c) => {
     const member = await updateMember(c.req.valid("param").member_identifier, c.req.valid("json"));
     return c.json(await enrichOne(member), 200);
+  },
+);
+
+// No SVG: it would run scripts from this site's own origin
+const AVATAR_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp"];
+
+membersRoutes.openapi(
+  createRoute({
+    method: "post",
+    path: "/members/{member_identifier}/avatar",
+    tags: ["Members"],
+    summary: "Upload a member's avatar (owner). Replaces the old one, including the proxy avatar",
+    security: signedIn,
+    middleware: [requireAuth, requireOwner] as const,
+    request: {
+      params: IdentifierParam,
+    },
+    responses: ok(MemberSchema, "The updated member"),
+  }),
+  async (c) => {
+    const member = await findMember(c.req.valid("param").member_identifier);
+    if (!member) throw new HttpError(404, "Member not found");
+
+    const type = c.req.header("Content-Type") ?? "";
+    if (!AVATAR_TYPES.includes(type)) throw new HttpError(415, "Use a PNG, JPEG, GIF or WebP image");
+
+    const body = await c.req.arrayBuffer();
+    if (body.byteLength === 0) throw new HttpError(400, "The image is empty");
+    if (body.byteLength > MAX_MEDIA_BYTES) throw new HttpError(413, "The image is over 10 MB");
+
+    // Same key the importer uses, so an upload overwrites the imported image
+    const key = `member-${member.id}-avatar_url`;
+    await rt().env.MEDIA.put(key, body, {
+      httpMetadata: {
+        contentType: type,
+      },
+    });
+
+    // New query each time so Discord and browsers drop their cached copy
+    const updated = await updateMember(member.id as string, {
+      avatar_url: `${mediaUrl(key)}?v=${Date.now()}`,
+      webhook_avatar_url: null,
+    });
+    return c.json(await enrichOne(updated), 200);
   },
 );
 
