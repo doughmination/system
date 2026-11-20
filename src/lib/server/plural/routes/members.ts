@@ -22,9 +22,16 @@ import { requireAuth, requireOwner } from "../middleware/auth";
 import { HttpError } from "../errors";
 import { MAX_MEDIA_BYTES, mediaUrl } from "../services/importer";
 import { rt } from "../runtime";
+import { broadcastFrontendUpdate } from "../ws";
 import type { JsonObject } from "../types";
 
 export const membersRoutes = router();
+
+// Any successful member write tells live listeners (like proxyBot) to reload the member list
+membersRoutes.use("*", async (c, next) => {
+  await next();
+  if (c.req.method !== "GET" && c.res.ok) await broadcastFrontendUpdate("members_update", {});
+});
 
 type Member = z.infer<typeof MemberSchema>;
 

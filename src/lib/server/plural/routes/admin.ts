@@ -65,6 +65,7 @@ adminRoutes.openapi(
       replace: query.replace === "true",
       copyMedia: query.copy_media === "true",
     });
+    await broadcastFrontendUpdate("members_update", {});
     return c.json(report, 200);
   },
 );
