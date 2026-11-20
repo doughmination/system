@@ -54,7 +54,6 @@
 
   let avatarFile = $state<FileList | null>(null);
   let bannerFile = $state<FileList | null>(null);
-  let localiseKept = $state<string[]>([]);
 
   const chosen = $derived(members.find((member) => member.id === chosenId) ?? null);
 
@@ -200,22 +199,6 @@
     }, "Failed to save member");
   }
 
-  // One-off: moves outside image links onto this site
-  function localise() {
-    if (!confirm("Copy every member and system image onto this site? Links that fail (4xx or 5xx) get removed.")) return;
-
-    void run(async () => {
-      const report = await authFetch<{
-        copied: string[];
-        removed: string[];
-        kept: string[];
-      }>("/plural/admin/media/localise", { method: "POST" }, "Moving images failed");
-      await reload();
-      localiseKept = report.kept;
-      return `Copied ${report.copied.length}, removed ${report.removed.length}, kept ${report.kept.length} as they were`;
-    }, "Moving images failed");
-  }
-
   function remove() {
     if (!chosen || !confirm(`Delete ${memberName(chosen)}? Their past switches stay in the history.`)) return;
 
@@ -321,24 +304,6 @@
         </section>
       </div>
 
-      {#if auth.isOwner}
-        <section class="panel stack localise">
-          <h2>Move images to this site</h2>
-          <p class="muted small">Copies every avatar and banner that still lives elsewhere into this site's storage. Links that fail with 4xx or 5xx are removed.</p>
-          <div class="buttons">
-            <button type="button" disabled={saving} onclick={localise}>Move images</button>
-          </div>
-          {#if localiseKept.length > 0}
-            <p class="small">Kept as they were, try again later:</p>
-            <ul class="small">
-              {#each localiseKept as line (line)}
-                <li>{line}</li>
-              {/each}
-            </ul>
-          {/if}
-        </section>
-      {/if}
-
     {/if}
   </div>
 </Protected>
@@ -351,10 +316,6 @@
 
   h2 {
     font-size: 1.05rem;
-  }
-
-  .localise {
-    margin-top: 1.25rem;
   }
 
 </style>
