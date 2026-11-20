@@ -112,48 +112,67 @@ membersRoutes.openapi(
 );
 
 // No SVG: it would run scripts from this site's own origin
-const AVATAR_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp"];
+const IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp"];
 
-membersRoutes.openapi(
-  createRoute({
-    method: "post",
-    path: "/members/{member_identifier}/avatar",
-    tags: ["Members"],
+// Each upload gets one fixed R2 key per member, so a new upload overwrites the last
+const IMAGE_UPLOADS = [
+  {
+    path: "avatar",
+    field: "avatar_url",
     summary: "Upload a member's avatar (owner). Replaces the old one, including the proxy avatar",
-    security: signedIn,
-    middleware: [requireAuth, requireOwner] as const,
-    request: {
-      params: IdentifierParam,
-    },
-    responses: ok(MemberSchema, "The updated member"),
-  }),
-  async (c) => {
-    const member = await findMember(c.req.valid("param").member_identifier);
-    if (!member) throw new HttpError(404, "Member not found");
-
-    const type = c.req.header("Content-Type") ?? "";
-    if (!AVATAR_TYPES.includes(type)) throw new HttpError(415, "Use a PNG, JPEG, GIF or WebP image");
-
-    const body = await c.req.arrayBuffer();
-    if (body.byteLength === 0) throw new HttpError(400, "The image is empty");
-    if (body.byteLength > MAX_MEDIA_BYTES) throw new HttpError(413, "The image is over 10 MB");
-
-    // One fixed key per member, so each upload overwrites the last
-    const key = `member-${member.id}-avatar_url`;
-    await rt().env.MEDIA.put(key, body, {
-      httpMetadata: {
-        contentType: type,
-      },
-    });
-
-    // New query each time so Discord and browsers drop their cached copy
-    const updated = await updateMember(member.id as string, {
-      avatar_url: `${mediaUrl(key)}?v=${Date.now()}`,
+    patch: (url: string) => ({
+      avatar_url: url,
       webhook_avatar_url: null,
-    });
-    return c.json(await enrichOne(updated), 200);
+    }),
   },
-);
+  {
+    path: "banner",
+    field: "banner",
+    summary: "Upload a member's banner (owner). Replaces the old one",
+    patch: (url: string) => ({
+      banner: url,
+    }),
+  },
+] as const;
+
+for (const upload of IMAGE_UPLOADS) {
+  membersRoutes.openapi(
+    createRoute({
+      method: "post",
+      path: `/members/{member_identifier}/${upload.path}`,
+      tags: ["Members"],
+      summary: upload.summary,
+      security: signedIn,
+      middleware: [requireAuth, requireOwner] as const,
+      request: {
+        params: IdentifierParam,
+      },
+      responses: ok(MemberSchema, "The updated member"),
+    }),
+    async (c) => {
+      const member = await findMember(c.req.valid("param").member_identifier);
+      if (!member) throw new HttpError(404, "Member not found");
+
+      const type = c.req.header("Content-Type") ?? "";
+      if (!IMAGE_TYPES.includes(type)) throw new HttpError(415, "Use a PNG, JPEG, GIF or WebP image");
+
+      const body = await c.req.arrayBuffer();
+      if (body.byteLength === 0) throw new HttpError(400, "The image is empty");
+      if (body.byteLength > MAX_MEDIA_BYTES) throw new HttpError(413, "The image is over 10 MB");
+
+      const key = `member-${member.id}-${upload.field}`;
+      await rt().env.MEDIA.put(key, body, {
+        httpMetadata: {
+          contentType: type,
+        },
+      });
+
+      // New query each time so Discord and browsers drop their cached copy
+      const updated = await updateMember(member.id as string, upload.patch(`${mediaUrl(key)}?v=${Date.now()}`));
+      return c.json(await enrichOne(updated), 200);
+    },
+  );
+}
 
 membersRoutes.openapi(
   createRoute({

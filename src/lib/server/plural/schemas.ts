@@ -97,7 +97,6 @@ const memberFields = {
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Must be YYYY-MM-DD")
     .nullable(),
   pronouns: z.string().max(100).nullable(),
-  banner: Url,
   description: z.string().max(1000).nullable(),
   proxy_tags: z.array(ProxyTagSchema).max(100),
   keep_proxy: z.boolean(),

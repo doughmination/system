@@ -41,11 +41,6 @@
       label: "Birthday",
       placeholder: "YYYY-MM-DD, year 0004 hides it",
     },
-    {
-      key: "banner",
-      label: "Banner URL",
-      placeholder: "https://…",
-    },
   ] as const;
 
   type FieldKey = (typeof FIELDS)[number]["key"];
@@ -58,6 +53,8 @@
   let message = $state<MessageType>(null);
 
   let avatarFile = $state<FileList | null>(null);
+  let bannerFile = $state<FileList | null>(null);
+  let localiseKept = $state<string[]>([]);
 
   const chosen = $derived(members.find((member) => member.id === chosenId) ?? null);
 
@@ -68,7 +65,6 @@
       pronouns: "",
       color: "",
       birthday: "",
-      banner: "",
       description: "",
       proxy_tags: "",
     };
@@ -95,8 +91,9 @@
 
   function pick(member: PluralMember | null) {
     chosenId = member?.id ?? null;
-    // A picked image belongs to the member it was picked for
+    // Picked images belong to the member they were picked for
     avatarFile = new DataTransfer().files;
+    bannerFile = new DataTransfer().files;
     message = null;
     if (!member) {
       form = emptyForm();
@@ -108,7 +105,6 @@
       pronouns: member.pronouns ?? "",
       color: member.color ?? "",
       birthday: member.birthday ?? "",
-      banner: member.banner ?? "",
       description: member.description ?? "",
       proxy_tags: tagsToText(member.proxy_tags),
     };
@@ -162,7 +158,16 @@
 
     // Read before pick() below clears them
     const creating = !chosenId;
-    const file = avatarFile?.[0];
+    const uploads = [
+      {
+        path: "avatar",
+        file: avatarFile?.[0],
+      },
+      {
+        path: "banner",
+        file: bannerFile?.[0],
+      },
+    ];
 
     void run(async () => {
       const path = chosenId ? `/plural/members/${encodeURIComponent(chosenId)}` : "/plural/members";
@@ -175,21 +180,40 @@
       await reload();
       pick(members.find((member) => member.id === saved.id) ?? null);
 
-      // The picked image waited in the form until the member existed
-      if (file) {
-        await authFetch(`/plural/members/${encodeURIComponent(saved.id)}/avatar`, {
+      // Picked images waited in the form until the member existed
+      const picked = uploads.filter((upload) => upload.file);
+      for (const { path, file } of picked) {
+        await authFetch(`/plural/members/${encodeURIComponent(saved.id)}/${path}`, {
           method: "POST",
           headers: {
-            "Content-Type": file.type,
+            "Content-Type": file!.type,
           },
           body: file,
-        }, "Member saved, but the avatar upload failed");
+        }, `Member saved, but the ${path} upload failed`);
+      }
+      if (picked.length > 0) {
         await reload();
         pick(members.find((member) => member.id === saved.id) ?? null);
       }
 
       return creating ? "Member created!" : "Member saved!";
     }, "Failed to save member");
+  }
+
+  // One-off: moves outside image links onto this site
+  function localise() {
+    if (!confirm("Copy every member and system image onto this site? Links that 404 get removed.")) return;
+
+    void run(async () => {
+      const report = await authFetch<{
+        copied: string[];
+        removed: string[];
+        kept: string[];
+      }>("/plural/admin/media/localise", { method: "POST" }, "Moving images failed");
+      await reload();
+      localiseKept = report.kept;
+      return `Copied ${report.copied.length}, removed ${report.removed.length}, kept ${report.kept.length} as they were`;
+    }, "Moving images failed");
   }
 
   function remove() {
@@ -244,6 +268,14 @@
                 {chosen ? "Uploads when you save. Replaces the current avatar and the proxy avatar" : "Uploads when you create the member"}. PNG, JPEG, GIF or WebP, up to 10 MB
               </small>
             </label>
+
+            <label class="field">
+              <span>Banner</span>
+              <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" bind:files={bannerFile} />
+              <small class="muted">
+                {chosen ? "Uploads when you save. Replaces the current banner" : "Uploads when you create the member"}. Same formats, up to 10 MB
+              </small>
+            </label>
           {/if}
 
           <label class="field">
@@ -289,6 +321,24 @@
         </section>
       </div>
 
+      {#if auth.isOwner}
+        <section class="panel stack localise">
+          <h2>Move images to this site</h2>
+          <p class="muted small">Copies every avatar and banner that still lives elsewhere into this site's storage. Links that 404 are removed.</p>
+          <div class="buttons">
+            <button type="button" disabled={saving} onclick={localise}>Move images</button>
+          </div>
+          {#if localiseKept.length > 0}
+            <p class="small">Kept as they were, try again later:</p>
+            <ul class="small">
+              {#each localiseKept as line (line)}
+                <li>{line}</li>
+              {/each}
+            </ul>
+          {/if}
+        </section>
+      {/if}
+
     {/if}
   </div>
 </Protected>
@@ -301,6 +351,10 @@
 
   h2 {
     font-size: 1.05rem;
+  }
+
+  .localise {
+    margin-top: 1.25rem;
   }
 
 </style>
